@@ -15,6 +15,10 @@ switch (end($uriParts)) {
     case "signup":
         $return = signup();
         break;
+
+    case "lists":
+        $return = lists();
+        break;
 }
 
 if (isset($return)) {
