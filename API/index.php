@@ -10,11 +10,16 @@ $uriParts = array_filter($uriParts);
 switch (end($uriParts)) {
     case "login":
         $return = login();
+        break;
+
+    case "signup":
+        $return = signup();
+        break;
 }
 
 if (isset($return)) {
     header("Content-Type:application/json; charset=UTF-8");
-    echo json_encode(login(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    echo json_encode($return, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 } else {
     readfile("info.html");
 }

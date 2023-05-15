@@ -14,6 +14,9 @@ function userinfo() {
 
     if (isset($_POST["email"])) {
         $email = filter_var($_POST["email"], FILTER_SANITIZE_SPECIAL_CHARS);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $email = null;
+        }
     }
 
     if (isset($_POST["password"])) {
