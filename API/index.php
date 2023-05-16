@@ -7,69 +7,71 @@ $uri = filter_var($_SERVER['REQUEST_URI'], FILTER_UNSAFE_RAW);
 $uriParts = explode("/",$uri);
 $uriParts = array_filter($uriParts);
 
+$db = db();
+
 switch (end($uriParts)) {
     case "login":
-        $return = login();
+        $return = login($db);
         break;
 
     case "signup":
-        $return = signup();
+        $return = signup($db);
         break;
 
     case "lists":
-        $return = lists();
+        $return = lists($db);
         break;
 
     case "list":
-        $return = api_list();
+        $return = api_list($db);
         break;
 
     case "addlist":
-        $return = addlist();
+        $return = addlist($db);
         break;
 
     case "editlist":
-        $return = editlist();
+        $return = editlist($db);
         break;
 
     case "dellist":
-        $return = dellist();
+        $return = dellist($db);
         break;
 
     case "additem":
-        $return = additem();
+        $return = additem($db);
         break;
 
     case "edititem":
-        $return = edititem();
+        $return = edititem($db);
         break;
 
     case "edititemx":
-        $return = edititemx();
+        $return = edititemx($db);
         break;
 
     case "delitem":
-        $return = delitem();
+        $return = delitem($db);
         break;
 
     case "deleteall":
-        $return = deleteall();
+        $return = deleteall($db);
         break;
 
     case "complete":
-        $return = complete();
+        $return = complete($db);
         break;
 
     case "completeall":
-        $return = completeall();
+        $return = completeall($db);
         break;
 
     case "restore":
-        $return = restore();
+        $return = restore($db);
         break;
 
     case "restoreall":
-        $return = restoreall();
+        $return = restoreall($db);
         break;
 }
 

@@ -1,8 +1,7 @@
 <?php
 require_once("universalfunctions.php");
 
-function login() {
-    $db = db();
+function login($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -28,8 +27,7 @@ function login() {
     }
 }
 
-function signup() {
-    $db = db();
+function signup($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {

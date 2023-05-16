@@ -2,8 +2,7 @@
 require_once("universalfunctions.php");
 require_once("userfunctions.php");
 
-function additem() {
-    $db = db();
+function additem($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -19,7 +18,7 @@ function additem() {
         return respond("No list id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $listid = filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS);
             $stmt=$db->prepare('SELECT `listid` FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
@@ -43,8 +42,7 @@ function additem() {
     }
 }
 
-function edititem() {
-    $db = db();
+function edititem($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -60,7 +58,7 @@ function edititem() {
         return respond("No item id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('UPDATE `items` SET `itemname`=:itemname WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["itemname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -76,8 +74,7 @@ function edititem() {
     }
 }
 
-function edititemx() {
-    $db = db();
+function edititemx($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -93,7 +90,7 @@ function edititemx() {
         return respond("No item id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('UPDATE `items` SET `amount`=:count WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["count"=>filter_var($_POST["count"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -109,8 +106,7 @@ function edititemx() {
     }
 }
 
-function delitem() {
-    $db = db();
+function delitem($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -123,7 +119,7 @@ function delitem() {
         return respond("No item id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('DELETE FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -139,8 +135,7 @@ function delitem() {
     }
 }
 
-function deleteall() {
-    $db = db();
+function deleteall($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -153,7 +148,7 @@ function deleteall() {
         return respond("No list id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('DELETE FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -169,8 +164,7 @@ function deleteall() {
     }
 }
 
-function complete() {
-    $db = db();
+function complete($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -183,7 +177,7 @@ function complete() {
         return respond("No item id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('UPDATE `items` SET `status`=1 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -199,8 +193,7 @@ function complete() {
     }
 }
 
-function completeall() {
-    $db = db();
+function completeall($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -213,7 +206,7 @@ function completeall() {
         return respond("No list id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('UPDATE `items` SET `status`=1 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -229,8 +222,7 @@ function completeall() {
     }
 }
 
-function restore() {
-    $db = db();
+function restore($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -243,7 +235,7 @@ function restore() {
         return respond("No item id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('UPDATE `items` SET `status`=0 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -259,8 +251,7 @@ function restore() {
     }
 }
 
-function restoreall() {
-    $db = db();
+function restoreall($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -273,7 +264,7 @@ function restoreall() {
         return respond("No list id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('UPDATE `items` SET `status`=0 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {

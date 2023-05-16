@@ -2,8 +2,7 @@
 require_once("universalfunctions.php");
 require_once("userfunctions.php");
 
-function lists() {
-    $db = db();
+function lists($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -13,7 +12,7 @@ function lists() {
         return respond("No password provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('SELECT `listid`,`listname` FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email)');
             $stmt->execute(["email"=>$userinfo[0]]);
@@ -34,8 +33,7 @@ function lists() {
     }
 }
 
-function api_list() {
-    $db = db();
+function api_list($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -48,7 +46,7 @@ function api_list() {
         return respond("No list id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('SELECT `itemid`,`itemname`,`status`,`amount` FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
             $stmt->execute(["email"=>$userinfo[0], "listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)]);
@@ -71,8 +69,7 @@ function api_list() {
     }
 }
 
-function addlist() {
-    $db = db();
+function addlist($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -85,7 +82,7 @@ function addlist() {
         return respond("No list name provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('INSERT INTO `lists` (`user`,`listname`) VALUES ((SELECT `userid` FROM `users` WHERE `email`=:email),:listname)');
             if ($stmt->execute(["email"=>$userinfo[0],"listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -101,8 +98,7 @@ function addlist() {
     }
 }
 
-function editlist() {
-    $db = db();
+function editlist($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -118,7 +114,7 @@ function editlist() {
         return respond("No list id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('UPDATE `lists` SET `listname`=:listname WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
             if ($stmt->execute(["listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
@@ -134,8 +130,7 @@ function editlist() {
     }
 }
 
-function dellist() {
-    $db = db();
+function dellist($db) {
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
@@ -148,7 +143,7 @@ function dellist() {
         return respond("No list id provided.",false);
 
     } else {
-        $login = login();
+        $login = login($db);
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('DELETE FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
