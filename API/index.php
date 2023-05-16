@@ -47,6 +47,14 @@ switch (end($uriParts)) {
     case "edititemx":
         $return = edititemx();
         break;
+
+    case "delitem":
+        $return = delitem();
+        break;
+
+    case "deleteall":
+        $return = deleteall();
+        break;
 }
 
 if (isset($return)) {

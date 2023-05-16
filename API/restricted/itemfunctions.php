@@ -108,4 +108,64 @@ function edititemx() {
         }
     }
 }
+
+function delitem() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    } else if (empty($_POST["itemid"])) {
+        return respond("No item id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('DELETE FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
+            if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("Item deleted successfully.",True);
+
+            } else {
+                return respond("Failed to delete item.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
+
+function deleteall() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    } else if (empty($_POST["listid"])) {
+        return respond("No list id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('DELETE FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
+            if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("Deleted all items successfully.",True);
+
+            } else {
+                return respond("Failed to delete all items.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
 ?>
