@@ -55,6 +55,22 @@ switch (end($uriParts)) {
     case "deleteall":
         $return = deleteall();
         break;
+
+    case "complete":
+        $return = complete();
+        break;
+
+    case "completeall":
+        $return = completeall();
+        break;
+
+    case "restore":
+        $return = restore();
+        break;
+
+    case "restoreall":
+        $return = restoreall();
+        break;
 }
 
 if (isset($return)) {

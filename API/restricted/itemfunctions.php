@@ -168,4 +168,124 @@ function deleteall() {
         }
     }
 }
+
+function complete() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    }  else if (empty($_POST["itemid"])) {
+        return respond("No item id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('UPDATE `items` SET `status`=1 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
+            if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("Item completed successfully.",True);
+
+            } else {
+                return respond("Failed to complete item.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
+
+function completeall() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    }  else if (empty($_POST["listid"])) {
+        return respond("No list id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('UPDATE `items` SET `status`=1 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
+            if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("Items completed successfully.",True);
+
+            } else {
+                return respond("Failed to complete items.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
+
+function restore() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    }  else if (empty($_POST["itemid"])) {
+        return respond("No item id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('UPDATE `items` SET `status`=0 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
+            if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("Item restored successfully.",True);
+
+            } else {
+                return respond("Failed to restore item.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
+
+function restoreall() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    }  else if (empty($_POST["listid"])) {
+        return respond("No list id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('UPDATE `items` SET `status`=0 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
+            if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("Items restored successfully.",True);
+
+            } else {
+                return respond("Failed to restore items.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
 ?>
