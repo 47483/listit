@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selftests</title>
+    <style>
+        .succeeded {
+            background-color: #00ff00;
+        }
+
+        .failed {
+            background-color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        let testurl = "localhost/listit/API/";
+
+        function fetchTest(testInfo,url,formData,expectedResult) {
+            fetch(url,{
+                method:"POST",
+                body:formData
+            })
+
+            .then(response=>{
+                if (response.status == 200) {
+                    return response.json();
+                }
+            })
+
+            .then(data=>{
+                let testResult = document.createElement("div");
+                testResult.innerHTML = data.result;
+
+                if (data.result == expectedResult) {
+                    testResult.classList = "succeeded";
+
+                } else {
+                    testResult.classList = "failed";
+                }
+
+                document.body.appendChild(testResult);
+            })
+        }
+
+        fd = new FormData();
+        fd.append("selftest",true);
+        fetchTest("aha",testurl+"login",fd,false);
+    </script>
+</body>
+</html>

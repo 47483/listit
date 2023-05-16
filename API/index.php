@@ -8,6 +8,11 @@ $uriParts = explode("/",$uri);
 $uriParts = array_filter($uriParts);
 
 $db = db();
+$selftest = isset($_POST["selftest"]);
+
+if ($selftest) {
+    $db->beginTransaction();
+}
 
 switch (end($uriParts)) {
     case "login":
@@ -73,12 +78,22 @@ switch (end($uriParts)) {
     case "restoreall":
         $return = restoreall($db);
         break;
+
+    case "testing":
+        $testing = true;
+        readfile("selftests.html");
+        break;
+}
+
+if ($selftest) {
+    $db->rollBack();
 }
 
 if (isset($return)) {
     header("Content-Type:application/json; charset=UTF-8");
     echo json_encode($return, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-} else {
+
+} else if (empty($testing)) {
     readfile("info.html");
 }
 ?>
