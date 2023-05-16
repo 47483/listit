@@ -35,6 +35,10 @@ switch (end($uriParts)) {
     case "dellist":
         $return = dellist();
         break;
+
+    case "additem":
+        $return = additem();
+        break;
 }
 
 if (isset($return)) {

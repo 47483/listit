@@ -13,17 +13,28 @@ function additem() {
         return respond("No password provided.",false);
 
     } else if (empty($_POST["name"])) {
-        return respond("No list name provided.",false);
+        return respond("No item name provided.",false);
+
+    } else if (empty($_POST["listid"])) {
+        return respond("No list id provided.",false);
 
     } else {
         $login = login();
         if (get_object_vars($login)["result"]) {
-            $stmt=$db->prepare('INSERT INTO `items` (`user`,`listname`) VALUES ((SELECT `userid` FROM `users` WHERE `email`=:email),:listname)');
-            if ($stmt->execute(["email"=>$userinfo[0],"listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
-                return respond("List added successfully.",True);
+            $listid = filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS);
+            $stmt=$db->prepare('SELECT `listid` FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
+            $stmt->execute(["email"=>$userinfo[0],"listid"=>$listid]);
+            if ($row=$stmt->fetch()) {
+                $stmt=$db->prepare('INSERT INTO `items` (`user`,`list`,`itemname`,`status`,`amount`) VALUES ((SELECT `userid` FROM `users` WHERE `email`=:email),:listid,:itemname,0,1)');
+                if ($stmt->execute(["email"=>$userinfo[0],"listid"=>$listid,"itemname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                    return respond("Item added successfully.",True);
+    
+                } else {
+                    return respond("Failed to add item.",False);
+                }
 
             } else {
-                return respond("Failed to add list.",False);
+                return respond("There is no list with id $listid.",False);
             }
 
         } else {
