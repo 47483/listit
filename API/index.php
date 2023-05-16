@@ -19,6 +19,10 @@ switch (end($uriParts)) {
     case "lists":
         $return = lists();
         break;
+
+    case "list":
+        $return = api_list();
+        break;
 }
 
 if (isset($return)) {
