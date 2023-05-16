@@ -39,6 +39,14 @@ switch (end($uriParts)) {
     case "additem":
         $return = additem();
         break;
+
+    case "edititem":
+        $return = edititem();
+        break;
+
+    case "edititemx":
+        $return = edititemx();
+        break;
 }
 
 if (isset($return)) {

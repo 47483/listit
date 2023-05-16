@@ -42,4 +42,70 @@ function additem() {
         }
     }
 }
+
+function edititem() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    } else if (empty($_POST["name"])) {
+        return respond("No item name provided.",false);
+
+    } else if (empty($_POST["itemid"])) {
+        return respond("No item id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('UPDATE `items` SET `itemname`=:itemname WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
+            if ($stmt->execute(["itemname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("Item edited successfully.",True);
+
+            } else {
+                return respond("Failed to edit item.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
+
+function edititemx() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    } else if (empty($_POST["count"])) {
+        return respond("No item count provided.",false);
+
+    } else if (empty($_POST["itemid"])) {
+        return respond("No item id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('UPDATE `items` SET `amount`=:count WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
+            if ($stmt->execute(["count"=>filter_var($_POST["count"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("Item edited successfully.",True);
+
+            } else {
+                return respond("Failed to edit item.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
 ?>
