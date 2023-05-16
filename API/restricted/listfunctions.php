@@ -70,4 +70,97 @@ function api_list() {
         }
     }
 }
+
+function addlist() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    } else if (empty($_POST["name"])) {
+        return respond("No list name provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('INSERT INTO `lists` (`user`,`listname`) VALUES ((SELECT `userid` FROM `users` WHERE `email`=:email),:listname)');
+            if ($stmt->execute(["email"=>$userinfo[0],"listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("List added successfully.",True);
+
+            } else {
+                return respond("Failed to add list.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
+
+function editlist() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    } else if (empty($_POST["name"])) {
+        return respond("No list name provided.",false);
+
+    } else if (empty($_POST["id"])) {
+        return respond("No list id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('UPDATE `lists` SET `listname`=:listname WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
+            if ($stmt->execute(["listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"listid"=>filter_var($_POST["id"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("List edited successfully.",True);
+
+            } else {
+                return respond("Failed to edit list.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
+
+function dellist() {
+    $db = db();
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    } else if (empty($_POST["id"])) {
+        return respond("No list id provided.",false);
+
+    } else {
+        $login = login();
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('DELETE FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
+            if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["id"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                return respond("List deleted successfully.",True);
+
+            } else {
+                return respond("Failed to delete list.",False);
+            }
+
+        } else {
+            return $login;
+        }
+    }
+}
 ?>

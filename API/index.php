@@ -23,6 +23,18 @@ switch (end($uriParts)) {
     case "list":
         $return = api_list();
         break;
+
+    case "addlist":
+        $return = addlist();
+        break;
+
+    case "editlist":
+        $return = editlist();
+        break;
+
+    case "dellist":
+        $return = dellist();
+        break;
 }
 
 if (isset($return)) {
