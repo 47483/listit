@@ -13,14 +13,33 @@
         .failed {
             background-color: #ff0000;
         }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-bottom: 0.25em;
+        }
+
+        th,td {
+            width: 25vw;
+            padding:0.5em;
+        }
     </style>
 </head>
 <body>
     <script>
-        let testurl = "localhost/listit/API/";
+        var testurl = "localhost/listit/API/";
 
-        function fetchTest(testInfo,url,formData,expectedResult) {
-            fetch(url,{
+        async function fetchTest(subject,testInfo,formData,expectedResult) {
+            formData.append("selftest",true);
+
+            fetch(testurl+subject,{
                 method:"POST",
                 body:formData
             })
@@ -32,8 +51,33 @@
             })
 
             .then(data=>{
-                let testResult = document.createElement("div");
-                testResult.innerHTML = data.result;
+                let testResult = document.createElement("tr");
+                let table = document.createElement("table");
+                let tdBuilder = document.createElement("td");
+                tdBuilder.innerHTML = subject;
+                testResult.appendChild(tdBuilder);
+
+                tdBuilder = document.createElement("td");
+                tdBuilder.innerHTML = testInfo;
+                testResult.appendChild(tdBuilder);
+
+                tdBuilder = document.createElement("td");
+                if (expectedResult == true) {
+                    tdBuilder.innerHTML = "EXPECTED SUCCESS";
+
+                } else {
+                    tdBuilder.innerHTML = "EXPECTED FAIL";
+                }
+                testResult.appendChild(tdBuilder);
+
+                tdBuilder = document.createElement("td");
+                if (data.result) {
+                    tdBuilder.innerHTML = "GOT SUCCESS";
+
+                } else {
+                    tdBuilder.innerHTML = "GOT FAIL";
+                }
+                testResult.appendChild(tdBuilder);
 
                 if (data.result == expectedResult) {
                     testResult.classList = "succeeded";
@@ -42,13 +86,41 @@
                     testResult.classList = "failed";
                 }
 
-                document.body.appendChild(testResult);
+                tdBuilder = document.createElement("td");
+                tdBuilder.innerHTML = data.message;
+
+                table.appendChild(testResult);
+                document.body.appendChild(table);
             })
         }
 
-        fd = new FormData();
-        fd.append("selftest",true);
-        fetchTest("aha",testurl+"login",fd,false);
+        function testUserfunctions() {
+            //Login
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test")
+            fetchTest("login","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test")
+            fetchTest("login","Using wrong email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest")
+            fetchTest("login","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test")
+            fetchTest("login","Missing email param.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fetchTest("login","Missing password param.",fd,false);
+        }
+
+        testUserfunctions();
     </script>
 </body>
 </html>

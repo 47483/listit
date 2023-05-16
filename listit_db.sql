@@ -32,13 +32,12 @@ CREATE TABLE `items` (
   KEY `list_2` (`list`),
   CONSTRAINT `items_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `items_ibfk_2` FOREIGN KEY (`list`) REFERENCES `lists` (`listid`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 /*Data for the table `items` */
 
 insert  into `items`(`itemid`,`user`,`list`,`itemname`,`status`,`amount`) values 
-(2,2,3,'testitem',0,1),
-(3,2,3,'testitem2',0,2);
+(1,1,1,'testitem',0,1);
 
 /*Table structure for table `lists` */
 
@@ -51,12 +50,12 @@ CREATE TABLE `lists` (
   PRIMARY KEY (`listid`),
   KEY `user` (`user`),
   CONSTRAINT `lists_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 /*Data for the table `lists` */
 
 insert  into `lists`(`listid`,`user`,`listname`) values 
-(3,2,'testlist');
+(1,1,'testlist');
 
 /*Table structure for table `users` */
 
@@ -67,12 +66,12 @@ CREATE TABLE `users` (
   `email` varchar(60) COLLATE utf8_swedish_ci NOT NULL,
   `password` varchar(160) COLLATE utf8_swedish_ci NOT NULL,
   PRIMARY KEY (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 /*Data for the table `users` */
 
 insert  into `users`(`userid`,`email`,`password`) values 
-(2,'lindman.melvin@gmail.com','f564c4b8475fbf0ba19707e0f2449e714529362f');
+(1,'test@test.test','a94a8fe5ccb19ba61c4c0873d391e987982fbbd3');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
