@@ -97,7 +97,6 @@
         }
 
         function testUserfunctions() {
-            //Login
             let login = document.createElement("table");
             login.id = "login";
             document.body.appendChild(login);
@@ -106,23 +105,24 @@
             signup.id = "signup";
             document.body.appendChild(signup);
 
+            //Login
             fd = new FormData();
             fd.append("email","test@test.test");
-            fd.append("password","test")
+            fd.append("password","test");
             fetchTest("login","Using all correct params.",fd,true);
 
             fd = new FormData();
             fd.append("email","wrongtest@test.test");
-            fd.append("password","test")
+            fd.append("password","test");
             fetchTest("login","Using wrong email.",fd,false);
 
             fd = new FormData();
             fd.append("email","test@test.test");
-            fd.append("password","wrongtest")
+            fd.append("password","wrongtest");
             fetchTest("login","Using wrong password.",fd,false);
 
             fd = new FormData();
-            fd.append("password","test")
+            fd.append("password","test");
             fetchTest("login","Missing email.",fd,false);
 
             fd = new FormData();
@@ -132,21 +132,21 @@
             //Signup
             fd = new FormData();
             fd.append("email","newtest@test.test");
-            fd.append("password","test")
+            fd.append("password","test");
             fetchTest("signup","Using all correct params.",fd,true);
 
             fd = new FormData();
             fd.append("email","wrong");
-            fd.append("password","test")
+            fd.append("password","test");
             fetchTest("signup","Using invalid email.",fd,false);
 
             fd = new FormData();
             fd.append("email","test@test.test");
-            fd.append("password","test")
+            fd.append("password","test");
             fetchTest("signup","Using existing email.",fd,false);
 
             fd = new FormData();
-            fd.append("password","test")
+            fd.append("password","test");
             fetchTest("signup","Missing email.",fd,false);
 
             fd = new FormData();
@@ -154,7 +154,221 @@
             fetchTest("signup","Missing password.",fd,false);
         }
 
+        function testListfunctions() {
+            let lists = document.createElement("table");
+            lists.id = "lists";
+            document.body.appendChild(lists);
+
+            let list = document.createElement("table");
+            list.id = "list";
+            document.body.appendChild(list);
+
+            let addlist = document.createElement("table");
+            addlist.id = "addlist";
+            document.body.appendChild(addlist);
+
+            let editlist = document.createElement("table");
+            editlist.id = "editlist";
+            document.body.appendChild(editlist);
+
+            let dellist = document.createElement("table");
+            dellist.id = "dellist";
+            document.body.appendChild(dellist);
+
+            //lists
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fetchTest("lists","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test");
+            fetchTest("lists","Using wrong mail.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest");
+            fetchTest("lists","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test");
+            fetchTest("lists","Missing mail.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fetchTest("lists","Missing password.",fd,false);
+
+            //list
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fetchTest("list","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fetchTest("list","Using wrong email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest");
+            fd.append("listid",1);
+            fetchTest("list","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",-1);
+            fetchTest("list","Using wrong listid.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test");
+            fd.append("listid",1);
+            fetchTest("list","Missing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("listid",1);
+            fetchTest("list","Missing password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fetchTest("list","Missing listid.",fd,false);
+
+            //addlist
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("name","newtest");
+            fetchTest("addlist","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test");
+            fd.append("name","newtest");
+            fetchTest("addlist","Using wrong email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest");
+            fd.append("name","newtest");
+            fetchTest("addlist","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test");
+            fd.append("name","newtest");
+            fetchTest("addlist","Missing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("name","newtest");
+            fetchTest("addlist","Missing password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fetchTest("addlist","Missing name.",fd,false);
+
+            //editlist
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fd.append("name","newtest");
+            fetchTest("editlist","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fd.append("name","newtest");
+            fetchTest("editlist","Using wrong email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest");
+            fd.append("listid",1);
+            fd.append("name","newtest");
+            fetchTest("editlist","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",-1);
+            fd.append("name","newtest");
+            fetchTest("editlist","Using invalid listid.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test");
+            fd.append("listid",1);
+            fd.append("name","newtest");
+            fetchTest("editlist","Missing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("listid",1);
+            fd.append("name","newtest");
+            fetchTest("editlist","Missing password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("name","newtest");
+            fetchTest("editlist","Missing listid.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fetchTest("editlist","Missing name.",fd,false);
+
+            //dellist
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fetchTest("dellist","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fetchTest("dellist","Using wrong email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest");
+            fd.append("listid",1);
+            fetchTest("dellist","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",-1);
+            fetchTest("dellist","Using invalid listid.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test");
+            fd.append("listid",1);
+            fetchTest("dellist","Missing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("listid",1);
+            fetchTest("dellist","Missing password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fetchTest("dellist","Missing listid.",fd,false);
+        }
+
         testUserfunctions();
+        testListfunctions();
     </script>
 </body>
 </html>
