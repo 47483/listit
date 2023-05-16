@@ -44,14 +44,14 @@ function api_list() {
     } else if ($userinfo[1] == null) {
         return respond("No password provided.",false);
 
-    } else if (empty($_POST["id"])) {
+    } else if (empty($_POST["listid"])) {
         return respond("No list id provided.",false);
 
     } else {
         $login = login();
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('SELECT `itemid`,`itemname`,`status`,`amount` FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
-            $stmt->execute(["email"=>$userinfo[0], "listid"=>filter_var($_POST["id"], FILTER_SANITIZE_SPECIAL_CHARS)]);
+            $stmt->execute(["email"=>$userinfo[0], "listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)]);
             $items = array();
             while ($row=$stmt->fetch()) {
                 $item = new stdClass();
@@ -114,14 +114,14 @@ function editlist() {
     } else if (empty($_POST["name"])) {
         return respond("No list name provided.",false);
 
-    } else if (empty($_POST["id"])) {
+    } else if (empty($_POST["listid"])) {
         return respond("No list id provided.",false);
 
     } else {
         $login = login();
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('UPDATE `lists` SET `listname`=:listname WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
-            if ($stmt->execute(["listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"listid"=>filter_var($_POST["id"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
+            if ($stmt->execute(["listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("List edited successfully.",True);
 
             } else {
@@ -144,14 +144,14 @@ function dellist() {
     } else if ($userinfo[1] == null) {
         return respond("No password provided.",false);
 
-    } else if (empty($_POST["id"])) {
+    } else if (empty($_POST["listid"])) {
         return respond("No list id provided.",false);
 
     } else {
         $login = login();
         if (get_object_vars($login)["result"]) {
             $stmt=$db->prepare('DELETE FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
-            if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["id"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
+            if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("List deleted successfully.",True);
 
             } else {
