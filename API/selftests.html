@@ -8,10 +8,12 @@
     <style>
         .succeeded {
             background-color: #00ff00;
+            border-bottom: 0.25em solid #00dd00;
         }
 
         .failed {
             background-color: #ff0000;
+            border-bottom: 0.25em solid #dd0000;
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
@@ -27,7 +29,7 @@
         }
 
         th,td {
-            width: 25vw;
+            width: 20vw;
             padding:0.5em;
         }
     </style>
@@ -36,7 +38,7 @@
     <script>
         var testurl = "localhost/listit/API/";
 
-        async function fetchTest(subject,testInfo,formData,expectedResult) {
+        function fetchTest(subject,testInfo,formData,expectedResult) {
             formData.append("selftest",true);
 
             fetch(testurl+subject,{
@@ -51,8 +53,8 @@
             })
 
             .then(data=>{
+                let table = document.getElementById(subject);
                 let testResult = document.createElement("tr");
-                let table = document.createElement("table");
                 let tdBuilder = document.createElement("td");
                 tdBuilder.innerHTML = subject;
                 testResult.appendChild(tdBuilder);
@@ -88,14 +90,22 @@
 
                 tdBuilder = document.createElement("td");
                 tdBuilder.innerHTML = data.message;
+                testResult.appendChild(tdBuilder);
 
                 table.appendChild(testResult);
-                document.body.appendChild(table);
             })
         }
 
         function testUserfunctions() {
             //Login
+            let login = document.createElement("table");
+            login.id = "login";
+            document.body.appendChild(login);
+
+            let signup = document.createElement("table");
+            signup.id = "signup";
+            document.body.appendChild(signup);
+
             fd = new FormData();
             fd.append("email","test@test.test");
             fd.append("password","test")
@@ -113,11 +123,35 @@
 
             fd = new FormData();
             fd.append("password","test")
-            fetchTest("login","Missing email param.",fd,false);
+            fetchTest("login","Missing email.",fd,false);
 
             fd = new FormData();
             fd.append("email","test@test.test");
-            fetchTest("login","Missing password param.",fd,false);
+            fetchTest("login","Missing password.",fd,false);
+
+            //Signup
+            fd = new FormData();
+            fd.append("email","newtest@test.test");
+            fd.append("password","test")
+            fetchTest("signup","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrong");
+            fd.append("password","test")
+            fetchTest("signup","Using invalid email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test")
+            fetchTest("signup","Using existing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test")
+            fetchTest("signup","Missing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","newtest@test.test");
+            fetchTest("signup","Missing password.",fd,false);
         }
 
         testUserfunctions();
