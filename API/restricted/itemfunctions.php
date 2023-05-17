@@ -92,12 +92,18 @@ function edititemx($db) {
     } else {
         $login = login($db);
         if (get_object_vars($login)["result"]) {
-            $stmt=$db->prepare('UPDATE `items` SET `amount`=:count WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
-            if ($stmt->execute(["count"=>filter_var($_POST["count"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
-                return respond("Item edited successfully.",True);
+            $count = filter_var($_POST["count"],FILTER_SANITIZE_SPECIAL_CHARS);
+            if ($count >= 0) {
+                $stmt=$db->prepare('UPDATE `items` SET `amount`=:count WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
+                if ($stmt->execute(["count"=>$count,"email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
+                    return respond("Item edited successfully.",True);
+
+                } else {
+                    return respond("Failed to edit item.",False);
+                }
 
             } else {
-                return respond("Failed to edit item.",False);
+                return respond("Invalid item count.",False);
             }
 
         } else {
