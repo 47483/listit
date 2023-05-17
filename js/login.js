@@ -29,6 +29,7 @@ function loginsignup(method) {
             if (data.result) {
                 localStorage.setItem("listitEmail", email);
                 localStorage.setItem("listitPassword", password);
+                sessionStorage.setItem("targetList",false);
                 window.location.href = "listit.html";
 
             } else {
@@ -61,6 +62,7 @@ function auth() {
         } else {
             localStorage.removeItem("listitEmail");
             localStorage.removeItem("listitPassword");
+            sessionStorage.removeItem("targetList");
         }
     })
 }
