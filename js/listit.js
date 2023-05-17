@@ -53,7 +53,21 @@ function lists() {
     .then(data=>{
         if (data.result) {
             let slists = data.lists;
-            console.log(slists);
+
+            let addBar = document.createElement("div");
+            addBar.id = "addBar";
+            document.body.appendChild(addBar);
+
+            let addInput = document.createElement("input");
+            addInput.id = "addInput";
+            addInput.placeholder = "New List";
+            addBar.appendChild(addInput);
+
+            let addBtn = document.createElement("button");
+            addBtn.id = "addBtn";
+            addBtn.innerHTML = "+";
+            addBar.appendChild(addBtn);
+
             for (let list in slists) {
                 let listBuilder = document.createElement("div");
                 listBuilder.classList = "list";
@@ -114,6 +128,4 @@ function changeName(id) {
             }
         })
     }
-
-    resizeInput(id);
 }
