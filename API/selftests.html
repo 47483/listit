@@ -151,7 +151,7 @@
             fd = new FormData();
             fd.append("email","wrong");
             fd.append("password","test");
-            fetchTest("signup","Using invalid email. (Returns Empty)",fd,true);
+            fetchTest("signup","Using invalid email.",fd,false);
 
             fd = new FormData();
             fd.append("email","test@test.test");
@@ -452,7 +452,7 @@
             fd.append("password","test");
             fd.append("listid",-1);
             fd.append("name","test");
-            fetchTest("additem","Using invalid listid. (Returns Empty)",fd,true);
+            fetchTest("additem","Using invalid listid.",fd,false);
 
             fd = new FormData();
             fd.append("password","test");
