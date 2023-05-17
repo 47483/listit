@@ -23,6 +23,15 @@
             color: white;
         }
 
+        h3 {
+            text-align: center;
+            background-color: #00ff00;
+            padding: 1em;
+            border-bottom: 0.25em solid #00dd00;
+            margin: 0;
+            margin-bottom: 0.25em;
+        }
+
         table {
             border-collapse: collapse;
             margin-bottom: 0.25em;
@@ -97,6 +106,10 @@
         }
 
         function testUserfunctions() {
+            let title = document.createElement("h3");
+            title.innerHTML = "User Functions";
+            document.body.appendChild(title);
+
             let login = document.createElement("table");
             login.id = "login";
             document.body.appendChild(login);
@@ -155,6 +168,10 @@
         }
 
         function testListfunctions() {
+            let title = document.createElement("h3");
+            title.innerHTML = "List Functions";
+            document.body.appendChild(title);
+
             let lists = document.createElement("table");
             lists.id = "lists";
             document.body.appendChild(lists);
@@ -367,8 +384,234 @@
             fetchTest("dellist","Missing listid.",fd,false);
         }
 
+        function testItemfunctions() {
+            let title = document.createElement("h3");
+            title.innerHTML = "Item Functions";
+            document.body.appendChild(title);
+
+            let additem = document.createElement("table");
+            additem.id = "additem";
+            document.body.appendChild(additem);
+
+            let edititem = document.createElement("table");
+            edititem.id = "edititem";
+            document.body.appendChild(edititem);
+
+            let edititemx = document.createElement("table");
+            edititemx.id = "edititemx";
+            document.body.appendChild(edititemx);
+
+            let delitem = document.createElement("table");
+            delitem.id = "delitem";
+            document.body.appendChild(delitem);
+
+            let deleteall = document.createElement("table");
+            deleteall.id = "deleteall";
+            document.body.appendChild(deleteall);
+
+            let complete = document.createElement("table");
+            complete.id = "complete";
+            document.body.appendChild(complete);
+
+            let completeall = document.createElement("table");
+            completeall.id = "completeall";
+            document.body.appendChild(completeall);
+
+            let restore = document.createElement("table");
+            restore.id = "restore";
+            document.body.appendChild(restore);
+
+            let restoreall = document.createElement("table");
+            restoreall.id = "restoreall";
+            document.body.appendChild(restoreall);
+
+            //additem
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fd.append("name","test");
+            fetchTest("additem","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fd.append("name","test");
+            fetchTest("additem","Using wrong email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest");
+            fd.append("listid",1);
+            fd.append("name","test");
+            fetchTest("additem","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",-1);
+            fd.append("name","test");
+            fetchTest("additem","Using invalid listid.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test");
+            fd.append("listid",1);
+            fd.append("name","test");
+            fetchTest("additem","Missing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("listid",1);
+            fd.append("name","test");
+            fetchTest("additem","Missing password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("name","test");
+            fetchTest("additem","Missing listid.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("listid",1);
+            fetchTest("additem","Missing name.",fd,false);
+
+            //edititem
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fd.append("name","newtest");
+            fetchTest("edititem","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fd.append("name","newtest");
+            fetchTest("edititem","Using wrong email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest");
+            fd.append("itemid",1);
+            fd.append("name","newtest");
+            fetchTest("edititem","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("itemid",-1);
+            fd.append("name","newtest");
+            fetchTest("edititem","Using invalid itemid.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fd.append("name","newtest");
+            fetchTest("edititem","Missing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("itemid",1);
+            fd.append("name","newtest");
+            fetchTest("edititem","Missing password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("name","newtest");
+            fetchTest("edititem","Missing itemid.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fetchTest("edititem","Missing name.",fd,false);
+
+            //edititemx
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fd.append("count",1);
+            fetchTest("edititem","Using all correct params.",fd,true);
+
+            fd = new FormData();
+            fd.append("email","wrongtest@test.test");
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fd.append("count",1);
+            fetchTest("edititem","Using wrong email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","wrongtest");
+            fd.append("itemid",1);
+            fd.append("count",1);
+            fetchTest("edititem","Using wrong password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("itemid",-1);
+            fd.append("count",1);
+            fetchTest("edititem","Using invalid itemid.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fd.append("count",-1);
+            fetchTest("edititem","Using invalid count.",fd,false);
+
+            fd = new FormData();
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fd.append("count",1);
+            fetchTest("edititem","Missing email.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("itemid",1);
+            fd.append("count",1);
+            fetchTest("edititem","Missing password.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("count",1);
+            fetchTest("edititem","Missing itemid.",fd,false);
+
+            fd = new FormData();
+            fd.append("email","test@test.test");
+            fd.append("password","test");
+            fd.append("itemid",1);
+            fetchTest("edititem","Missing count.",fd,false);
+
+            //delitem
+
+
+            //deleteall
+
+
+            //complete
+
+
+            //completeall
+
+
+            //restore
+
+
+            //restoreall
+        }
+
         testUserfunctions();
         testListfunctions();
+        testItemfunctions();
     </script>
 </body>
 </html>
