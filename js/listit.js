@@ -1,5 +1,11 @@
 auth();
-lists();
+
+if (sessionStorage.getItem("targetList")) {
+    //Specific list thing
+
+} else {
+    lists();
+}
 
 var touchEnabled = 'ontouchstart' in window;
 
@@ -84,6 +90,7 @@ function deletePopup() {
 }
 
 function lists() {
+    sessionStorage.removeItem("targetList");
     deletePopup();
 
     fd = new FormData;
