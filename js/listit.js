@@ -1,15 +1,15 @@
 auth();
 lists();
 
-var textboxManager = [];
-setInterval(function(){manageTextboxes();}, 0);
+var touchEnabled = 'ontouchstart' in window;
 
-function manageTextboxes() {
-    for (let textBox in textboxManager) {
-        let input = document.getElementById(textboxManager[textBox]);
-        input.style.width = "0px";
-        input.style.width = input.scrollWidth+"px";
-    }
+var textboxManager = [];
+var pressManager = {};
+setInterval(function(){update();}, 0);
+
+function update() {
+    manageTextboxes();
+    managePresses();
 }
 
 function auth() {
@@ -43,6 +43,40 @@ function logout() {
     localStorage.removeItem("listitPassword");
     sessionStorage.removeItem("targetList");
     window.location.replace("index.html");
+}
+
+function manageTextboxes() {
+    for (let textBox in textboxManager) {
+        let input = document.getElementById(textboxManager[textBox]);
+        input.style.width = "0px";
+        input.style.width = input.scrollWidth+"px";
+    }
+}
+
+function managePresses() {
+    screenWidth = document.body.clientWidth;
+    for (let pressable in pressManager) {
+        if (pressManager[pressable] && (Date.now()-pressManager[pressable]) >= 500) {
+            if (!document.getElementById("popup")) {
+                if (pressable.split("-")[0] == "list") {
+                    listPopup(pressable);
+                }
+            }
+        }
+    }
+}
+
+function deletePopup() {
+    popup = document.getElementById("popup");
+    popupBG = document.getElementById("popupBG");
+
+    if (popup) {
+        popup.remove();
+    }
+
+    if(popupBG) {
+        popupBG.remove();
+    }
 }
 
 function lists() {
@@ -84,15 +118,26 @@ function lists() {
             for (let list in slists) {
                 let listBuilder = document.createElement("div");
                 listBuilder.classList = "removable list";
+                
+                if (touchEnabled) {
+                    listBuilder.ontouchstart = function(){pressManager["list-"+slists[list].id] = Date.now()};
+                    listBuilder.ontouchend = function(){pressManager["list-"+slists[list].id] = false};
+
+                } else {
+                    listBuilder.onmousedown = function(){pressManager["list-"+slists[list].id] = Date.now()};
+                    listBuilder.onmouseup = function(){pressManager["list-"+slists[list].id] = false};
+                    listBuilder.onmouseout = function(){pressManager["list-"+slists[list].id] = false};
+                }
+
                 document.body.appendChild(listBuilder);
 
                 let nameBuilder = document.createElement("input");
                 nameBuilder.classList = "listName";
                 nameBuilder.type = "text";
                 nameBuilder.value = slists[list].name;
-                nameBuilder.id = "nameBox"+slists[list].id;
-                textboxManager.push("nameBox"+slists[list].id);
-                nameBuilder.onblur = function(){changeName("nameBox"+slists[list].id)};
+                nameBuilder.id = "nameBox-"+slists[list].id;
+                textboxManager.push("nameBox-"+slists[list].id);
+                nameBuilder.onblur = function(){changeListName("nameBox-"+slists[list].id)};
                 listBuilder.appendChild(nameBuilder);
             }
 
@@ -102,7 +147,29 @@ function lists() {
     })
 }
 
-function changeName(id) {
+function listPopup(id) {
+    popupBG = document.createElement("div");
+    popupBG.id = "popupBG";
+
+    if (touchEnabled) {
+        popupBG.ontouchstart = function(){deletePopup();};
+
+    } else {
+        popupBG.onmousedown = function(){deletePopup();};
+    }
+
+    document.body.appendChild(popupBG);
+
+    popup = document.createElement("div");
+    popup.id = "popup";
+    document.body.appendChild(popup);
+
+    title = document.createElement("h3");
+    title.innerHTML = "sus";
+    popup.appendChild(title);
+}
+
+function changeListName(id) {
     let input = document.getElementById(id);
     let previousValue = input.value;
 
@@ -158,6 +225,7 @@ function addList() {
         console.log(data.message);
         if (data.result) {
             textboxManager = [];
+            pressManager = {};
             let remove = document.querySelectorAll(".removable");
             remove.forEach(element => {
                 element.remove();
