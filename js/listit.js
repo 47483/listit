@@ -74,12 +74,18 @@ function deletePopup() {
         popup.remove();
     }
 
-    if(popupBG) {
+    if (popupBG) {
         popupBG.remove();
+    }
+
+    if (popup || popupBG) {
+        document.body.style.overflow = "auto";
     }
 }
 
 function lists() {
+    deletePopup();
+
     fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
@@ -107,6 +113,7 @@ function lists() {
             let addInput = document.createElement("input");
             addInput.id = "addInput";
             addInput.placeholder = "New List";
+            addInput.autocomplete = "off";
             addBar.appendChild(addInput);
 
             let addBtn = document.createElement("button");
@@ -118,6 +125,7 @@ function lists() {
             for (let list in slists) {
                 let listBuilder = document.createElement("div");
                 listBuilder.classList = "removable list";
+                listBuilder.id = "list-"+slists[list].id;
                 
                 if (touchEnabled) {
                     listBuilder.ontouchstart = function(){pressManager["list-"+slists[list].id] = Date.now()};
@@ -148,6 +156,9 @@ function lists() {
 }
 
 function listPopup(id) {
+    document.body.style.overflow = "hidden";
+    listName = document.getElementById("nameBox-"+id.split("-")[1]).value;
+
     popupBG = document.createElement("div");
     popupBG.id = "popupBG";
 
@@ -164,9 +175,20 @@ function listPopup(id) {
     popup.id = "popup";
     document.body.appendChild(popup);
 
-    title = document.createElement("h3");
-    title.innerHTML = "sus";
+    title = document.createElement("p");
+    title.innerHTML = "List Options";
     popup.appendChild(title);
+
+    openBtn = document.createElement("button");
+    openBtn.innerHTML = "Open "+listName;
+    openBtn.classList = "popupBtn";
+    popup.appendChild(openBtn);
+
+    deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "Delete "+listName;
+    deleteBtn.classList = "popupBtn";
+    deleteBtn.onmouseup = function(){delList(id.split("-")[1]);};
+    popup.appendChild(deleteBtn);
 }
 
 function changeListName(id) {
@@ -204,13 +226,45 @@ function changeListName(id) {
     }
 }
 
-function addList() { 
+function addList() {
     fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     fd.append("name",document.getElementById("addInput").value);
 
     fetch("API/addlist",{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        console.log(data.message);
+        if (data.result) {
+            textboxManager = [];
+            pressManager = {};
+            let remove = document.querySelectorAll(".removable");
+            remove.forEach(element => {
+                element.remove();
+            })
+            lists();
+
+        }
+    })
+}
+
+function delList(id) {
+    fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("listid",id);
+
+    fetch("API/dellist",{
         method:"POST",
         body:fd
     })
