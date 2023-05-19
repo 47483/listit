@@ -1,6 +1,17 @@
 auth();
 lists();
 
+var textboxManager = [];
+setInterval(function(){manageTextboxes();}, 0);
+
+function manageTextboxes() {
+    for (let textBox in textboxManager) {
+        let input = document.getElementById(textboxManager[textBox]);
+        input.style.width = "0px";
+        input.style.width = input.scrollWidth+"px";
+    }
+}
+
 function auth() {
     fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
@@ -56,6 +67,7 @@ function lists() {
 
             let addBar = document.createElement("div");
             addBar.id = "addBar";
+            addBar.classList = "removable";
             document.body.appendChild(addBar);
 
             let addInput = document.createElement("input");
@@ -65,34 +77,29 @@ function lists() {
 
             let addBtn = document.createElement("button");
             addBtn.id = "addBtn";
+            addBtn.onclick = function(){addList()};
             addBtn.innerHTML = "+";
             addBar.appendChild(addBtn);
 
             for (let list in slists) {
                 let listBuilder = document.createElement("div");
-                listBuilder.classList = "list";
+                listBuilder.classList = "removable list";
                 document.body.appendChild(listBuilder);
 
                 let nameBuilder = document.createElement("input");
                 nameBuilder.classList = "listName";
                 nameBuilder.type = "text";
                 nameBuilder.value = slists[list].name;
-                nameBuilder.id = slists[list].id;
-                nameBuilder.onblur = function(){changeName(slists[list].id)};
+                nameBuilder.id = "nameBox"+slists[list].id;
+                textboxManager.push("nameBox"+slists[list].id);
+                nameBuilder.onblur = function(){changeName("nameBox"+slists[list].id)};
                 listBuilder.appendChild(nameBuilder);
-                setInterval(function(){resizeInput(slists[list].id)},0);
             }
 
         } else {
             console.log(data.message);
         }
     })
-}
-
-function resizeInput(id) {
-    let input = document.getElementById(id);
-    input.style.width = "0px";
-    input.style.width = input.scrollWidth+"px";
 }
 
 function changeName(id) {
@@ -128,4 +135,35 @@ function changeName(id) {
             }
         })
     }
+}
+
+function addList() { 
+    fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("name",document.getElementById("addInput").value);
+
+    fetch("API/addlist",{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        console.log(data.message);
+        if (data.result) {
+            textboxManager = [];
+            let remove = document.querySelectorAll(".removable");
+            remove.forEach(element => {
+                element.remove();
+            })
+            lists();
+
+        }
+    })
 }
