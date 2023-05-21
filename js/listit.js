@@ -55,17 +55,32 @@ function manageTextboxes() {
     for (let textBox in textboxManager) {
         let input = document.getElementById(textboxManager[textBox]);
         input.style.width = "0px";
-        input.style.width = input.scrollWidth+"px";
+        if (input.scrollWidth <= input.parentElement.scrollWidth/3*2) {
+            input.style.width = input.scrollWidth+"px";
+
+        } else {
+            input.style.width = input.parentElement.scrollWidth/3*2+"px";
+        }
     }
 }
 
 function managePresses() {
-    screenWidth = document.body.clientWidth;
     for (let pressable in pressManager) {
-        if (pressManager[pressable] && (Date.now()-pressManager[pressable]) >= 500) {
+        document.getElementById(pressable).style.left = "0px";
+        if (pressManager[pressable] != false) {
+            let offset = (pressManager[pressable][0]-pressManager[pressable][2])*-1
+            let screenWidth = document.body.clientWidth;
+            
             if (!document.getElementById("popup")) {
-                if (pressable.split("-")[0] == "list") {
-                    listPopup(pressable);
+                document.getElementById(pressable).style.left = offset+"0px";
+                if ((Date.now()-pressManager[pressable][4]) >= 500 && Math.abs(offset) <= screenWidth/50) {
+                    if (pressable.split("-")[0] == "list") {
+                        listPopup(pressable);
+                    }
+                }
+
+                if (Math.abs(offset) > screenWidth/2) {
+                    console.log("delete");
                 }
             }
         }
@@ -135,13 +150,15 @@ function lists() {
                 listBuilder.id = "list-"+slists[list].id;
                 
                 if (touchEnabled) {
-                    listBuilder.ontouchstart = function(){pressManager["list-"+slists[list].id] = Date.now()};
-                    listBuilder.ontouchend = function(){pressManager["list-"+slists[list].id] = false};
+                    listBuilder.ontouchstart = function(e){pressManager["list-"+slists[list].id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+                    listBuilder.ontouchmove = function(e){pressManager["list-"+slists[list].id] = [pressManager["list-"+slists[list].id][0],pressManager["list-"+slists[list].id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+                    listBuilder.ontouchend = function(){pressManager["list-"+slists[list].id] = false;};
 
                 } else {
-                    listBuilder.onmousedown = function(){pressManager["list-"+slists[list].id] = Date.now()};
-                    listBuilder.onmouseup = function(){pressManager["list-"+slists[list].id] = false};
-                    listBuilder.onmouseout = function(){pressManager["list-"+slists[list].id] = false};
+                    listBuilder.onmousedown = function(e){pressManager["list-"+slists[list].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()];};
+                    listBuilder.onmousemove = function(e){if(pressManager["list-"+slists[list].id]){pressManager["list-"+slists[list].id] = [pressManager["list-"+slists[list].id][0],pressManager["list-"+slists[list].id][1],e.pageX,e.pageY,Date.now()];}};
+                    listBuilder.onmouseup = function(){pressManager["list-"+slists[list].id] = false;};
+                    listBuilder.onmouseout = function(){pressManager["list-"+slists[list].id] = false;};
                 }
 
                 document.body.appendChild(listBuilder);
