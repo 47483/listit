@@ -143,13 +143,13 @@ function deleteWarning(strength,add) {
         let warningL = document.createElement("div");
         warningL.classList = "deleteWarning";
         warningL.style.left = 0;
-        warningL.style.backgroundImage = `linear-gradient(to right, rgba(255,0,0,${strength/2}), rgba(255,0,0,0))`;
+        warningL.style.backgroundImage = `linear-gradient(to right, hsla(125,100%,60%,${strength/2}), hsla(125,100%,60%,0))`;
         document.body.appendChild(warningL);
 
         let warningR = document.createElement("div");
         warningR.classList = "deleteWarning";
         warningR.style.right = 0;
-        warningR.style.backgroundImage = `linear-gradient(to left, rgba(255,0,0,${strength/2}), rgba(255,0,0,0))`;
+        warningR.style.backgroundImage = `linear-gradient(to left, hsla(125,100%,60%,${strength/2}), hsla(125,100%,60%,0))`;
         document.body.appendChild(warningR);
     }
 }
