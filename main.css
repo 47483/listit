@@ -32,7 +32,7 @@
     background-color: white;
 }
 
-.list .item {
+.list {
     user-select: none;
     margin: 0.5em;
     text-align: center;
@@ -43,7 +43,24 @@
     padding-bottom: 1em;
 }
 
-.listName .itemName {
+.listName {
+    font-size: 2em;
+    background-color: inherit;
+    color: white;
+}
+
+.item {
+    user-select: none;
+    margin: 0.5em;
+    text-align: center;
+    background-color: hsl(125, 100%, 60%);
+    border-radius: 0.5em;
+    position: relative;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.itemName {
     font-size: 2em;
     background-color: inherit;
     color: white;

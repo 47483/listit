@@ -412,6 +412,11 @@ function list(id) {
             addBtn.innerHTML = "+";
             addBar.appendChild(addBtn);
 
+            let complete = document.createElement("div");
+            document.body.appendChild(complete);
+            let incomplete = document.createElement("div");
+            document.body.appendChild(incomplete);
+
             for (let item in items) {
                 let itemBuilder = document.createElement("div");
                 itemBuilder.classList = "removable item";
@@ -426,17 +431,22 @@ function list(id) {
                     itemBuilder.onmousedown = function(e){pressManager["item-"+items[item].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true;};
                 }
 
-                document.body.appendChild(itemBuilder);
+                if (items[item].status == true) {
+                    complete.appendChild(itemBuilder);
 
-                /**let nameBuilder = document.createElement("input");
-                nameBuilder.classList = "listName";
+                } else {
+                    incomplete.appendChild(itemBuilder);
+                }
+
+                let nameBuilder = document.createElement("input");
+                nameBuilder.classList = "itemName";
                 nameBuilder.type = "text";
-                nameBuilder.value = slists[list].name;
-                nameBuilder.id = "nameBox-"+slists[list].id;
-                textboxManager.push("nameBox-"+slists[list].id);
-                nameBuilder.onblur = function(){changeListName("nameBox-"+slists[list].id)};
-                listBuilder.appendChild(nameBuilder);
-                **/
+                nameBuilder.value = items[item].name;
+                nameBuilder.id = "nameBox-"+items[item].id;
+                textboxManager.push("nameBox-"+items[item].id);
+                //Append changeName function below
+                nameBuilder.onblur = function(){};
+                itemBuilder.appendChild(nameBuilder);
             }
 
         } else {
