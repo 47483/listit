@@ -54,13 +54,22 @@
     font-size: 4em;
     user-select: none;
     margin: 0.125em;
-    margin-bottom: 0.25em;
     text-align: center;
     background-color: hsl(125, 100%, 60%);
     border-radius: 0.125em;
-    position: relative;
     padding: 0.25em;
     word-wrap: break-word;
+}
+
+#backBtn {
+    color: white;
+    font-size: 2em;
+    user-select: none;
+    margin: 0.25em;
+    text-align: center;
+    background-color: hsl(125, 100%, 60%);
+    border-radius: 0.25em;
+    padding: 0.25em;
 }
 
 .item {

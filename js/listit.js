@@ -1,12 +1,5 @@
 auth();
-sessionStorage.clear();
-
-if (sessionStorage.getItem("targetList")) {
-    list(sessionStorage.getItem("targetList"));
-
-} else {
-    lists();
-}
+pickPage();
 
 var touchEnabled = 'ontouchstart' in window;
 
@@ -62,6 +55,15 @@ function auth() {
             window.location.replace("index.html");
         }
     })
+}
+
+function pickPage() {
+    if (sessionStorage.getItem("targetList")) {
+        list(sessionStorage.getItem("targetList"));
+    
+    } else {
+        lists();
+    } 
 }
 
 function logout() {
@@ -174,6 +176,10 @@ function deleteWarning(strength,add) {
 }
 
 function lists() {
+    sessionStorage.clear();
+    deletePopup();
+    removeRemovable();
+
     fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
@@ -191,10 +197,6 @@ function lists() {
     
     .then(data=>{
         if (data.result) {
-            sessionStorage.removeItem("targetList");
-            deletePopup();
-            removeRemovable();
-
             let slists = data.lists;
 
             let addBar = document.createElement("div");
@@ -363,7 +365,7 @@ function addList() {
         console.log(data.message);
         if (data.result) {
             removeRemovable();
-            lists();
+            pickPage();
 
         }
     })
@@ -390,13 +392,17 @@ function delList(id) {
         console.log(data.message);
         if (data.result) {
             removeRemovable();
-            lists();
+            pickPage();
 
         }
     })
 }
 
 function list(id) {
+    sessionStorage.setItem("targetList",id);
+    deletePopup();
+    removeRemovable();
+
     fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
@@ -415,14 +421,18 @@ function list(id) {
     
     .then(data=>{
         if (data.result) {
-            sessionStorage.setItem("targetList",id);
-            deletePopup();
-            removeRemovable();
-
             let listTitle = document.createElement("div");
             listTitle.innerHTML = data.name;
             listTitle.id = "listTitle";
+            listTitle.classList = "removable";
             document.body.appendChild(listTitle);
+
+            let backBtn = document.createElement("div");
+            backBtn.innerHTML = "Back To Lists";
+            backBtn.id = "backBtn";
+            backBtn.onclick = function(){lists();};
+            backBtn.classList = "removable";
+            document.body.appendChild(backBtn);
 
             let items = data.items;
 
@@ -482,6 +492,32 @@ function list(id) {
 
         } else {
             console.log(data.message);
+        }
+    })
+}
+
+function addItem() {
+    fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("name",document.getElementById("addInput").value);
+
+    fetch("API/additem",{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        console.log(data.message);
+        if (data.result) {
+            removeRemovable();
+            pickPage();
         }
     })
 }
