@@ -101,7 +101,7 @@ function managePresses() {
                         listPopup(pressable);
 
                     } else if (pressable.split("-")[0] == "item") {
-                        //Popupbox for item
+                        itemPopup(pressable);
                     }
                 }
 
@@ -121,7 +121,7 @@ function managePresses() {
                     delList(pressable.split("-")[1]);
 
                 } else if (pressable.split("-")[0] == "item") {
-                    //Remove item
+                    delItem(pressable.split("-")[1]);
                 }
             }
         }
@@ -237,6 +237,7 @@ function lists() {
                 nameBuilder.type = "text";
                 nameBuilder.value = slists[list].name;
                 nameBuilder.id = "nameBox-"+slists[list].id;
+                nameBuilder.autocomplete = "off";
                 textboxManager.push("nameBox-"+slists[list].id);
                 nameBuilder.onblur = function(){changeObjectName("nameBox-"+slists[list].id);};
                 listBuilder.appendChild(nameBuilder);
@@ -450,7 +451,7 @@ function list(id) {
             let addBtn = document.createElement("button");
             addBtn.id = "addBtn";
             //Apply add function below
-            addBtn.onclick = function(){};
+            addBtn.onclick = function(){addItem(id);};
             addBtn.innerHTML = "+";
             addBar.appendChild(addBtn);
 
@@ -485,6 +486,7 @@ function list(id) {
                 nameBuilder.type = "text";
                 nameBuilder.value = items[item].name;
                 nameBuilder.id = "nameBox-"+items[item].id;
+                nameBuilder.autocomplete = "off";
                 textboxManager.push("nameBox-"+items[item].id);
                 nameBuilder.onblur = function(){changeObjectName("nameBox-"+items[item].id);};
                 itemBuilder.appendChild(nameBuilder);
@@ -496,11 +498,12 @@ function list(id) {
     })
 }
 
-function addItem() {
+function addItem(listid) {
     fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     fd.append("name",document.getElementById("addInput").value);
+    fd.append("listid",listid);
 
     fetch("API/additem",{
         method:"POST",
@@ -520,4 +523,62 @@ function addItem() {
             pickPage();
         }
     })
+}
+
+function delItem(id) {
+    fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("itemid",id);
+
+    fetch("API/delitem",{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        console.log(data.message);
+        if (data.result) {
+            removeRemovable();
+            pickPage();
+
+        }
+    })
+}
+
+function itemPopup(id) {
+    document.body.style.overflowY = "hidden";
+    itemName = document.getElementById("nameBox-"+id.split("-")[1]).value;
+
+    popupBG = document.createElement("div");
+    popupBG.id = "popupBG";
+
+    if (touchEnabled) {
+        popupBG.ontouchstart = function(){deletePopup();};
+
+    } else {
+        popupBG.onmousedown = function(){deletePopup();};
+    }
+
+    document.body.appendChild(popupBG);
+
+    popup = document.createElement("div");
+    popup.id = "popup";
+    document.body.appendChild(popup);
+
+    title = document.createElement("p");
+    title.innerHTML = "Item Options";
+    popup.appendChild(title);
+
+    deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "Delete "+itemName;
+    deleteBtn.classList = "popupBtn";
+    deleteBtn.onmouseup = function(){delItem(id.split("-")[1]);};
+    popup.appendChild(deleteBtn);
 }
