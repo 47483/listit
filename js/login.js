@@ -60,9 +60,8 @@ function auth() {
             window.location.replace("listit.html");
 
         } else {
-            localStorage.removeItem("listitEmail");
-            localStorage.removeItem("listitPassword");
-            sessionStorage.removeItem("targetList");
+            localStorage.clear();
+            sessionStorage.clear();
         }
     })
 }

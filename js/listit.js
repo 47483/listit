@@ -1,7 +1,6 @@
 auth();
-
-if (sessionStorage.getItem("targetList")) {
-    //Specific list thing
+if (localStorage.getItem("targetList")) {
+    console.log("yep");
 
 } else {
     lists();
@@ -11,9 +10,27 @@ var touchEnabled = 'ontouchstart' in window;
 
 var textboxManager = [];
 var pressManager = {};
+var mouseDown = false;
 var delManager = {};
 
 setInterval(function(){update();}, 0);
+
+document.addEventListener("mouseup",function(){
+    mouseDown = false;
+    for (let pressable in pressManager) {
+        pressManager[pressable] = false;
+    }
+})
+
+document.addEventListener("mousemove",function(e){
+    if (mouseDown) {
+        for (let pressable in pressManager) {
+            if (pressManager[pressable]) {
+                pressManager[pressable] = [pressManager[pressable][0],pressManager[pressable][1],e.pageX,e.pageY,Date.now()];
+            }
+        }
+    }
+})
 
 function update() {
     manageTextboxes();
@@ -38,18 +55,16 @@ function auth() {
     
     .then(data=>{
         if (!data.result) {
-            localStorage.removeItem("listitEmail");
-            localStorage.removeItem("listitPassword");
-            sessionStorage.removeItem("targetList");
+            localStorage.clear();
+            sessionStorage.clear();
             window.location.replace("index.html");
         }
     })
 }
 
 function logout() {
-    localStorage.removeItem("listitEmail");
-    localStorage.removeItem("listitPassword");
-    sessionStorage.removeItem("targetList");
+    localStorage.clear();
+    sessionStorage.clear();
     window.location.replace("index.html");
 }
 
@@ -190,10 +205,7 @@ function lists() {
                     listBuilder.ontouchend = function(){pressManager["list-"+slists[list].id] = false;};
 
                 } else {
-                    listBuilder.onmousedown = function(e){pressManager["list-"+slists[list].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()];};
-                    listBuilder.onmousemove = function(e){if(pressManager["list-"+slists[list].id]){pressManager["list-"+slists[list].id] = [pressManager["list-"+slists[list].id][0],pressManager["list-"+slists[list].id][1],e.pageX,e.pageY,Date.now()];}};
-                    listBuilder.onmouseup = function(){pressManager["list-"+slists[list].id] = false;};
-                    listBuilder.onmouseout = function(){pressManager["list-"+slists[list].id] = false;};
+                    listBuilder.onmousedown = function(e){pressManager["list-"+slists[list].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true;};
                 }
 
                 document.body.appendChild(listBuilder);
