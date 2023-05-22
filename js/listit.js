@@ -11,6 +11,8 @@ var touchEnabled = 'ontouchstart' in window;
 
 var textboxManager = [];
 var pressManager = {};
+var delManager = {};
+
 setInterval(function(){update();}, 0);
 
 function update() {
@@ -65,6 +67,8 @@ function manageTextboxes() {
 }
 
 function managePresses() {
+    deleteWarning(0,false);
+
     for (let pressable in pressManager) {
         document.getElementById(pressable).style.left = "0px";
         if (pressManager[pressable] != false) {
@@ -72,16 +76,26 @@ function managePresses() {
             let screenWidth = document.body.clientWidth;
             
             if (!document.getElementById("popup")) {
-                document.getElementById(pressable).style.left = offset+"0px";
+                document.getElementById(pressable).style.left = offset+"px";
                 if ((Date.now()-pressManager[pressable][4]) >= 500 && Math.abs(offset) <= screenWidth/50) {
                     if (pressable.split("-")[0] == "list") {
                         listPopup(pressable);
                     }
                 }
 
+                deleteWarning(Math.abs(offset)/screenWidth,true);
+
+                delManager[pressable] = false;
+
                 if (Math.abs(offset) > screenWidth/2) {
-                    console.log("delete");
+                    delManager[pressable] = true;
                 }
+            }
+
+        } else {
+            if (delManager[pressable]) {
+                delete delManager[pressable];
+                delList(pressable.split("-")[1]);
             }
         }
     }
@@ -100,7 +114,28 @@ function deletePopup() {
     }
 
     if (popup || popupBG) {
-        document.body.style.overflow = "auto";
+        document.body.style.overflowY = "auto";
+    }
+}
+
+function deleteWarning(strength,add) {
+    let remove = document.querySelectorAll(".deleteWarning");
+    remove.forEach(element => {
+        element.remove();
+    })
+
+    if (add) {
+        let warningL = document.createElement("div");
+        warningL.classList = "deleteWarning";
+        warningL.style.left = 0;
+        warningL.style.backgroundImage = `linear-gradient(to right, rgba(255,0,0,${strength/2}), rgba(255,0,0,0))`;
+        document.body.appendChild(warningL);
+
+        let warningR = document.createElement("div");
+        warningR.classList = "deleteWarning";
+        warningR.style.right = 0;
+        warningR.style.backgroundImage = `linear-gradient(to left, rgba(255,0,0,${strength/2}), rgba(255,0,0,0))`;
+        document.body.appendChild(warningR);
     }
 }
 
@@ -180,7 +215,7 @@ function lists() {
 }
 
 function listPopup(id) {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflowY = "hidden";
     listName = document.getElementById("nameBox-"+id.split("-")[1]).value;
 
     popupBG = document.createElement("div");

@@ -77,3 +77,10 @@
     font-size: inherit;
     border-radius: inherit;
 }
+
+.deleteWarning {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 75%;
+}
