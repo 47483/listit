@@ -59,8 +59,8 @@ function api_list($db) {
                 $item->amount = $row["amount"];
                 array_push($items,$item);
             }
-            $stmt=$db->prepare('SELECT `listname` FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email)');
-            $stmt->execute(["email"=>$userinfo[0]]);
+            $stmt=$db->prepare('SELECT `listname` FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
+            $stmt->execute(["email"=>$userinfo[0], "listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)]);
 
             $listname = filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS);
             if ($row=$stmt->fetch()) {

@@ -1,6 +1,8 @@
 auth();
-if (localStorage.getItem("targetList")) {
-    list(localStorage.getItem("targetList"));
+sessionStorage.clear();
+
+if (sessionStorage.getItem("targetList")) {
+    list(sessionStorage.getItem("targetList"));
 
 } else {
     lists();
@@ -234,7 +236,7 @@ function lists() {
                 nameBuilder.value = slists[list].name;
                 nameBuilder.id = "nameBox-"+slists[list].id;
                 textboxManager.push("nameBox-"+slists[list].id);
-                nameBuilder.onblur = function(){changeListName("nameBox-"+slists[list].id)};
+                nameBuilder.onblur = function(){changeObjectName("nameBox-"+slists[list].id);};
                 listBuilder.appendChild(nameBuilder);
             }
 
@@ -271,6 +273,7 @@ function listPopup(id) {
     openBtn = document.createElement("button");
     openBtn.innerHTML = "Open "+listName;
     openBtn.classList = "popupBtn";
+    openBtn.onmouseup = function(){list(id.split("-")[1]);};
     popup.appendChild(openBtn);
 
     deleteBtn = document.createElement("button");
@@ -280,22 +283,46 @@ function listPopup(id) {
     popup.appendChild(deleteBtn);
 }
 
-function changeListName(id) {
+function changeObjectName(id) {
     let input = document.getElementById(id);
     let previousValue = input.value;
 
     if (input.value == "") {
-        input.value = "unnamed list";
+        input.value = "unnamed";
     }
 
     if (input.className.split(" ").includes("listName")) {
         fd = new FormData;
         fd.append("email",localStorage.getItem("listitEmail"));
         fd.append("password",localStorage.getItem("listitPassword"));
-        fd.append("listid",id);
+        fd.append("listid",id.split("-")[1]);
         fd.append("name",input.value);
         
         fetch("API/editlist",{
+            method:"POST",
+            body:fd
+        })
+        
+        .then(response=>{
+            if (response.status == 200) {
+                return response.json();
+            }
+        })
+        
+        .then(data=>{
+            console.log(data.message);
+            if (!data.result) {
+                input.value = previousValue;
+            }
+        })
+    } else if (input.className.split(" ").includes("itemName")) {
+        fd = new FormData;
+        fd.append("email",localStorage.getItem("listitEmail"));
+        fd.append("password",localStorage.getItem("listitPassword"));
+        fd.append("itemid",id.split("-")[1]);
+        fd.append("name",input.value);
+        
+        fetch("API/edititem",{
             method:"POST",
             body:fd
         })
@@ -449,8 +476,7 @@ function list(id) {
                 nameBuilder.value = items[item].name;
                 nameBuilder.id = "nameBox-"+items[item].id;
                 textboxManager.push("nameBox-"+items[item].id);
-                //Append changeName function below
-                nameBuilder.onblur = function(){};
+                nameBuilder.onblur = function(){changeObjectName("nameBox-"+items[item].id);};
                 itemBuilder.appendChild(nameBuilder);
             }
 
