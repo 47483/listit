@@ -392,6 +392,11 @@ function list(id) {
             deletePopup();
             removeRemovable();
 
+            let listTitle = document.createElement("div");
+            listTitle.innerHTML = data.name;
+            listTitle.id = "listTitle";
+            document.body.appendChild(listTitle);
+
             let items = data.items;
 
             let addBar = document.createElement("div");
