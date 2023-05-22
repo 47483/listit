@@ -32,7 +32,7 @@
     background-color: white;
 }
 
-.list {
+.list .item {
     user-select: none;
     margin: 0.5em;
     text-align: center;
@@ -43,7 +43,7 @@
     padding-bottom: 1em;
 }
 
-.listName {
+.listName .itemName {
     font-size: 2em;
     background-color: inherit;
     color: white;

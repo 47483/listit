@@ -1,6 +1,6 @@
 auth();
 if (localStorage.getItem("targetList")) {
-    console.log("yep");
+    list(localStorage.getItem("targetList"));
 
 } else {
     lists();
@@ -95,6 +95,9 @@ function managePresses() {
                 if ((Date.now()-pressManager[pressable][4]) >= 500 && Math.abs(offset) <= screenWidth/50) {
                     if (pressable.split("-")[0] == "list") {
                         listPopup(pressable);
+
+                    } else if (pressable.split("-")[0] == "item") {
+                        //Popupbox for item
                     }
                 }
 
@@ -110,10 +113,24 @@ function managePresses() {
         } else {
             if (delManager[pressable]) {
                 delete delManager[pressable];
-                delList(pressable.split("-")[1]);
+                if (pressable.split("-")[0] == "list") {
+                    delList(pressable.split("-")[1]);
+
+                } else if (pressable.split("-")[0] == "item") {
+                    //Remove item
+                }
             }
         }
     }
+}
+
+function removeRemovable() {
+    textboxManager = [];
+    pressManager = {};
+    let remove = document.querySelectorAll(".removable");
+    remove.forEach(element => {
+        element.remove();
+    })
 }
 
 function deletePopup() {
@@ -155,9 +172,6 @@ function deleteWarning(strength,add) {
 }
 
 function lists() {
-    sessionStorage.removeItem("targetList");
-    deletePopup();
-
     fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
@@ -175,6 +189,10 @@ function lists() {
     
     .then(data=>{
         if (data.result) {
+            sessionStorage.removeItem("targetList");
+            deletePopup();
+            removeRemovable();
+
             let slists = data.lists;
 
             let addBar = document.createElement("div");
@@ -317,12 +335,7 @@ function addList() {
     .then(data=>{
         console.log(data.message);
         if (data.result) {
-            textboxManager = [];
-            pressManager = {};
-            let remove = document.querySelectorAll(".removable");
-            remove.forEach(element => {
-                element.remove();
-            })
+            removeRemovable();
             lists();
 
         }
@@ -349,14 +362,85 @@ function delList(id) {
     .then(data=>{
         console.log(data.message);
         if (data.result) {
-            textboxManager = [];
-            pressManager = {};
-            let remove = document.querySelectorAll(".removable");
-            remove.forEach(element => {
-                element.remove();
-            })
+            removeRemovable();
             lists();
 
+        }
+    })
+}
+
+function list(id) {
+    fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("listid",id);
+    
+    fetch("API/list",{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        if (data.result) {
+            sessionStorage.setItem("targetList",id);
+            deletePopup();
+            removeRemovable();
+
+            let items = data.items;
+
+            let addBar = document.createElement("div");
+            addBar.id = "addBar";
+            addBar.classList = "removable";
+            document.body.appendChild(addBar);
+
+            let addInput = document.createElement("input");
+            addInput.id = "addInput";
+            addInput.placeholder = "New Item";
+            addInput.autocomplete = "off";
+            addBar.appendChild(addInput);
+
+            let addBtn = document.createElement("button");
+            addBtn.id = "addBtn";
+            //Apply add function below
+            addBtn.onclick = function(){};
+            addBtn.innerHTML = "+";
+            addBar.appendChild(addBtn);
+
+            for (let item in items) {
+                let itemBuilder = document.createElement("div");
+                itemBuilder.classList = "removable item";
+                itemBuilder.id = "item-"+items[item].id;
+                
+                if (touchEnabled) {
+                    itemBuilder.ontouchstart = function(e){pressManager["item-"+items[item].id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+                    itemBuilder.ontouchmove = function(e){pressManager["item-"+items[item].id] = [pressManager["item-"+items[item].id][0],pressManager["item-"+items[item].id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+                    itemBuilder.ontouchend = function(){pressManager["item-"+items[item].id] = false;};
+
+                } else {
+                    itemBuilder.onmousedown = function(e){pressManager["item-"+items[item].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true;};
+                }
+
+                document.body.appendChild(itemBuilder);
+
+                /**let nameBuilder = document.createElement("input");
+                nameBuilder.classList = "listName";
+                nameBuilder.type = "text";
+                nameBuilder.value = slists[list].name;
+                nameBuilder.id = "nameBox-"+slists[list].id;
+                textboxManager.push("nameBox-"+slists[list].id);
+                nameBuilder.onblur = function(){changeListName("nameBox-"+slists[list].id)};
+                listBuilder.appendChild(nameBuilder);
+                **/
+            }
+
+        } else {
+            console.log(data.message);
         }
     })
 }
