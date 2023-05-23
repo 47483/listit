@@ -38,13 +38,13 @@
             <td>login</td>
             <td>Log in as user.</td>
             <td><b>string</b> email<br><b>string</b> password</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>signup</td>
             <td>Sign up as user.</td>
             <td><b>string</b> email<br><b>string</b> password</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
     </table>
     <h3>List Endpoints</h3>
@@ -59,31 +59,31 @@
             <td>lists</td>
             <td>List all lists for user.</td>
             <td><b>string</b> email<br><b>string</b> password</td>
-            <td><b>string</b> message<br><b>bool</b> result<br><b>array</b> lists</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><b>array</b> lists<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>list</td>
             <td>Get contents of list for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid</td>
-            <td><b>string</b> message<br><b>bool</b> result<br><b>array</b> items<br><b>string</b> name</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><b>array</b> items<br><b>string</b> name<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>addlist</td>
             <td>Add a new list for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>string</b> name</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>editlist</td>
             <td>Edit list for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid<br><b>string</b> name</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result<br><b>string</b> previous(IC)</td>
         </tr>
         <tr>
             <td>dellist</td>
             <td>Delete list for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
     </table>
     <h3>Item Endpoints</h3>
@@ -98,55 +98,55 @@
             <td>additem</td>
             <td>Add a new item for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid<br><b>string</b> name</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>edititem</td>
             <td>Edit item name for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> itemid<br><b>string</b> name</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result<br><b>string</b> previous(IC)</td>
         </tr>
         <tr>
             <td>edititemx</td>
             <td>Edit item count for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> itemid<br><b>int</b> count</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result<br><b>string</b> previous(IC)</td>
         </tr>
         <tr>
             <td>delitem</td>
             <td>Delete item for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> itemid</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>deleteall</td>
             <td>Delete all items from user list.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>complete</td>
             <td>Complete item for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> itemid</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>completeall</td>
             <td>Complete all items for user list.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>restore</td>
             <td>Restore item for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> itemid</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>restoreall</td>
             <td>Restore all items for user list.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid</td>
-            <td><b>string</b> message<br><b>bool</b> result</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
     </table>
 </body>
