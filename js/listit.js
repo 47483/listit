@@ -457,13 +457,14 @@ function list(id) {
             addBar.appendChild(addBtn);
 
             let incomplete = document.createElement("div");
+            incomplete.classList = "removable";
             document.body.appendChild(incomplete);
             let complete = document.createElement("div");
+            complete.classList = "removable";
             document.body.appendChild(complete);
 
             for (let item in items) {
                 let itemBuilder = document.createElement("div");
-                itemBuilder.classList = "removable item";
                 itemBuilder.id = "item-"+items[item].id;
                 
                 if (touchEnabled) {
@@ -476,9 +477,11 @@ function list(id) {
                 }
 
                 if (items[item].status == true) {
+                    itemBuilder.classList = "removable item complete";
                     complete.appendChild(itemBuilder);
 
                 } else {
+                    itemBuilder.classList = "removable item";
                     incomplete.appendChild(itemBuilder);
                 }
 
@@ -709,7 +712,7 @@ function updateStatus(input) {
     let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
-    fd.append("itemid",input.id.split("-")[1]);
+    fd.append("itemid",input.parentElement.id.split("-")[1]);
 
     let method = "restore";
 

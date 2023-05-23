@@ -84,6 +84,10 @@
     align-items: center;
 }
 
+.complete {
+    background-color: hsl(125, 0%, 80%);
+}
+
 .itemName {
     font-size: 2em;
     background-color: inherit;
@@ -106,7 +110,6 @@ input[type="checkbox"] {
     -moz-appearance: none;
     width: 2em;
     height: 2em;
-    border: 0.25em solid hsl(125, 100%, 60%);
     outline: 0.25em solid white;
     border-radius: 3px;
     margin: 0.25em;
