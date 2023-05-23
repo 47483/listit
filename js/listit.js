@@ -76,7 +76,10 @@ function manageTextboxes() {
     for (let textBox in textboxManager) {
         let input = document.getElementById(textboxManager[textBox]);
         input.style.width = "0px";
-        if (input.scrollWidth <= input.parentElement.scrollWidth/3*2) {
+        if (textboxManager[textBox].split("-")[0] == "countBox") {
+            input.style.width = input.scrollWidth+"px";
+
+        } else if (input.scrollWidth <= input.parentElement.scrollWidth/3*2) {
             input.style.width = input.scrollWidth+"px";
 
         } else {
@@ -450,15 +453,14 @@ function list(id) {
 
             let addBtn = document.createElement("button");
             addBtn.id = "addBtn";
-            //Apply add function below
             addBtn.onclick = function(){addItem(id);};
             addBtn.innerHTML = "+";
             addBar.appendChild(addBtn);
 
-            let complete = document.createElement("div");
-            document.body.appendChild(complete);
             let incomplete = document.createElement("div");
             document.body.appendChild(incomplete);
+            let complete = document.createElement("div");
+            document.body.appendChild(complete);
 
             for (let item in items) {
                 let itemBuilder = document.createElement("div");
@@ -481,6 +483,15 @@ function list(id) {
                     incomplete.appendChild(itemBuilder);
                 }
 
+                let checkBuilder = document.createElement("input");
+                checkBuilder.type = "checkbox";
+                checkBuilder.checked = items[item].status;
+                itemBuilder.appendChild(checkBuilder);
+
+                let nameBox = document.createElement("div");
+                nameBox.classList = "iBMaj";
+                itemBuilder.appendChild(nameBox);
+
                 let nameBuilder = document.createElement("input");
                 nameBuilder.classList = "itemName";
                 nameBuilder.type = "text";
@@ -489,7 +500,20 @@ function list(id) {
                 nameBuilder.autocomplete = "off";
                 textboxManager.push("nameBox-"+items[item].id);
                 nameBuilder.onblur = function(){changeObjectName("nameBox-"+items[item].id);};
-                itemBuilder.appendChild(nameBuilder);
+                nameBox.appendChild(nameBuilder);
+
+                let countBox = document.createElement("div");
+                countBox.classList = "iBMin";
+                countBox.innerHTML = "x";
+                itemBuilder.appendChild(countBox);
+
+                let countBuilder = document.createElement("input");
+                countBuilder.classList = "itemName";
+                countBuilder.type = "text";
+                countBuilder.value = items[item].amount;
+                countBuilder.id = "countBox-"+items[item].id;
+                textboxManager.push("countBox-"+items[item].id);
+                countBox.append(countBuilder);
             }
 
         } else {
