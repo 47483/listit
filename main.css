@@ -129,6 +129,7 @@ input[type="checkbox"]:checked {
     border-radius: 0.25em;
     font-size: 2em;
     transform: translate(0%,-50%);
+    z-index: 2;
 }
 
 #popupBG {
@@ -138,6 +139,7 @@ input[type="checkbox"]:checked {
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 2;
 }
 
 .popupBtn {

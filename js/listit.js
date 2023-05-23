@@ -33,7 +33,7 @@ function update() {
 }
 
 function auth() {
-    fd = new FormData;
+    let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     
@@ -183,7 +183,7 @@ function lists() {
     deletePopup();
     removeRemovable();
 
-    fd = new FormData;
+    let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     
@@ -297,7 +297,7 @@ function changeObjectName(id) {
     }
 
     if (input.className.split(" ").includes("listName")) {
-        fd = new FormData;
+        let fd = new FormData;
         fd.append("email",localStorage.getItem("listitEmail"));
         fd.append("password",localStorage.getItem("listitPassword"));
         fd.append("listid",id.split("-")[1]);
@@ -321,7 +321,7 @@ function changeObjectName(id) {
             }
         })
     } else if (input.className.split(" ").includes("itemName")) {
-        fd = new FormData;
+        let fd = new FormData;
         fd.append("email",localStorage.getItem("listitEmail"));
         fd.append("password",localStorage.getItem("listitPassword"));
         fd.append("itemid",id.split("-")[1]);
@@ -348,7 +348,7 @@ function changeObjectName(id) {
 }
 
 function addList() {
-    fd = new FormData;
+    let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     fd.append("name",document.getElementById("addInput").value);
@@ -375,7 +375,7 @@ function addList() {
 }
 
 function delList(id) {
-    fd = new FormData;
+    let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     fd.append("listid",id);
@@ -485,6 +485,7 @@ function list(id) {
                 let checkBuilder = document.createElement("input");
                 checkBuilder.type = "checkbox";
                 checkBuilder.checked = items[item].status;
+                checkBuilder.onclick = function(){updateStatus(checkBuilder)};
                 itemBuilder.appendChild(checkBuilder);
 
                 let nameBox = document.createElement("div");
@@ -523,7 +524,7 @@ function list(id) {
 }
 
 function addItem(listid) {
-    fd = new FormData;
+    let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     fd.append("name",document.getElementById("addInput").value);
@@ -550,7 +551,7 @@ function addItem(listid) {
 }
 
 function delItem(id) {
-    fd = new FormData;
+    let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     fd.append("itemid",id);
@@ -578,7 +579,7 @@ function delItem(id) {
 
 function itemPopup(id) {
     document.body.style.overflowY = "hidden";
-    itemName = document.getElementById("nameBox-"+id.split("-")[1]).value;
+    itemName = document.getElementById("inameBox-"+id.split("-")[1]).value;
 
     popupBG = document.createElement("div");
     popupBG.id = "popupBG";
@@ -620,7 +621,7 @@ function editItemX(id) {
         input.value = 999999999;
     }
 
-    fd = new FormData;
+    let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     fd.append("itemid",id.split("-")[1]);
@@ -650,7 +651,7 @@ function getPrevName(input) {
     let type = input.id.split("-")[0];
 
     if (type == "countBox" || type == "inameBox") {
-        fd = new FormData;
+        let fd = new FormData;
         fd.append("email",localStorage.getItem("listitEmail"));
         fd.append("password",localStorage.getItem("listitPassword"));
         fd.append("itemid",input.id.split("-")[1]);
@@ -679,7 +680,7 @@ function getPrevName(input) {
         })
 
     } else if (type == "nameBox") {
-        fd = new FormData;
+        let fd = new FormData;
         fd.append("email",localStorage.getItem("listitEmail"));
         fd.append("password",localStorage.getItem("listitPassword"));
         fd.append("listid",input.id.split("-")[1]);
@@ -702,4 +703,35 @@ function getPrevName(input) {
             }
         })
     }
+}
+
+function updateStatus(input) {
+    let fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("itemid",input.id.split("-")[1]);
+
+    let method = "restore";
+
+    if (input.checked) {
+        method = "complete";
+    }
+
+    fetch("API/"+method,{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        console.log(data.message);
+        if (data.result) {
+            pickPage();
+        }
+    })
 }
