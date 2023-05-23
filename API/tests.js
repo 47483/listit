@@ -342,6 +342,10 @@ function testItemfunctions() {
     title.innerHTML = "Item Functions";
     document.body.appendChild(title);
 
+    let item = document.createElement("table");
+    item.id = "item";
+    document.body.appendChild(item);
+
     let additem = document.createElement("table");
     additem.id = "additem";
     document.body.appendChild(additem);
@@ -377,6 +381,46 @@ function testItemfunctions() {
     let restoreall = document.createElement("table");
     restoreall.id = "restoreall";
     document.body.appendChild(restoreall);
+
+    //item
+    fd = new FormData();
+    fd.append("email","test@test.test");
+    fd.append("password","test");
+    fd.append("itemid",1);
+    fetchTest("item","Using all correct params.",fd,true);
+
+    fd = new FormData();
+    fd.append("email","wrongtest@test.test");
+    fd.append("password","test");
+    fd.append("itemid",1);
+    fetchTest("item","Using wrong email.",fd,false);
+
+    fd = new FormData();
+    fd.append("email","test@test.test");
+    fd.append("password","wrongtest");
+    fd.append("itemid",1);
+    fetchTest("item","Using wrong password.",fd,false);
+
+    fd = new FormData();
+    fd.append("email","test@test.test");
+    fd.append("password","wrongtest");
+    fd.append("itemid",-1);
+    fetchTest("item","Using invalid itemid.",fd,false);
+
+    fd = new FormData();
+    fd.append("password","test");
+    fd.append("itemid",1);
+    fetchTest("item","Missing email.",fd,false);
+
+    fd = new FormData();
+    fd.append("email","test@test.test");
+    fd.append("itemid",1);
+    fetchTest("item","Missing password.",fd,false);
+
+    fd = new FormData();
+    fd.append("email","test@test.test");
+    fd.append("password","test");
+    fetchTest("item","Missing itemid.",fd,false);
 
     //additem
     fd = new FormData();

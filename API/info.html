@@ -77,7 +77,7 @@
             <td>editlist</td>
             <td>Edit list for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid<br><b>string</b> name</td>
-            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result<br><b>string</b> previous(IC)</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>dellist</td>
@@ -95,6 +95,12 @@
             <th>JSON Response</th>
         </tr>
         <tr>
+            <td>item</td>
+            <td>Get item for user.</td>
+            <td><b>string</b> email<br><b>string</b> password<br><b>int</b> itemid</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><b>string</b> name<br><b>bool</b> status<br><b>int</b> amount<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
+        </tr>
+        <tr>
             <td>additem</td>
             <td>Add a new item for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> listid<br><b>string</b> name</td>
@@ -104,13 +110,13 @@
             <td>edititem</td>
             <td>Edit item name for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> itemid<br><b>string</b> name</td>
-            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result<br><b>string</b> previous(IC)</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>edititemx</td>
             <td>Edit item count for user.</td>
             <td><b>string</b> email<br><b>string</b> password<br><b>int</b> itemid<br><b>int</b> count</td>
-            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result<br><b>string</b> previous(IC)</td>
+            <td><b>ON SUCCESS:</b><br><b>string</b> message<br><b>bool</b> result<br><br><b>ON FAIL:</b><br><b>string</b> message<br><b>bool</b> result</td>
         </tr>
         <tr>
             <td>delitem</td>

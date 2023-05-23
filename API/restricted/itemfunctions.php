@@ -2,6 +2,42 @@
 require_once("universalfunctions.php");
 require_once("userfunctions.php");
 
+function item($db) {
+    $userinfo = userinfo();
+
+    if ($userinfo[0] == null) {
+        return respond("A user email is required.",false);
+
+    } else if ($userinfo[1] == null) {
+        return respond("No password provided.",false);
+
+    } else if (empty($_POST["itemid"])) {
+        return respond("No item id provided.",false);
+
+    } else {
+        $login = login($db);
+        if (get_object_vars($login)["result"]) {
+            $stmt=$db->prepare('SELECT `itemname`,`status`,`amount` FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
+            $stmt->execute(["email"=>$userinfo[0], "itemid"=>filter_var($_POST["itemid"], FILTER_SANITIZE_SPECIAL_CHARS)]);
+            
+            $response = respond("Item fetched successfully.",True);
+            if ($row=$stmt->fetch()) {
+                $response->name = $row["itemname"];
+                $response->status = $row["status"];
+                $response->amount = $row["amount"];
+
+            } else {
+                return respond("Invalid item id provided.",False);
+            }
+
+            return $response;
+
+        } else {
+            return $login;
+        }
+    }
+}
+
 function additem($db) {
     $userinfo = userinfo();
 

@@ -43,6 +43,10 @@ switch (end($uriParts)) {
         $return = dellist($db);
         break;
 
+    case "item":
+        $return = item($db);
+        break;
+
     case "additem":
         $return = additem($db);
         break;
