@@ -93,7 +93,7 @@ function edititemx($db) {
         $login = login($db);
         if (get_object_vars($login)["result"]) {
             $count = filter_var($_POST["count"],FILTER_SANITIZE_SPECIAL_CHARS);
-            if ($count >= 0) {
+            if ($count >= 0 && filter_var($count,FILTER_VALIDATE_INT)) {
                 $stmt=$db->prepare('UPDATE `items` SET `amount`=:count WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
                 if ($stmt->execute(["count"=>$count,"email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                     return respond("Item edited successfully.",True);
