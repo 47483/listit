@@ -291,7 +291,6 @@ function listPopup(id) {
 
 function changeObjectName(id) {
     let input = document.getElementById(id);
-    let previousValue = input.value;
 
     if (input.value == "") {
         input.value = "unnamed";
@@ -318,7 +317,7 @@ function changeObjectName(id) {
         .then(data=>{
             console.log(data.message);
             if (!data.result) {
-                input.value = previousValue;
+                input.value = "fromdb";
             }
         })
     } else if (input.className.split(" ").includes("itemName")) {
@@ -342,7 +341,7 @@ function changeObjectName(id) {
         .then(data=>{
             console.log(data.message);
             if (!data.result) {
-                input.value = previousValue;
+                input.value = "fromdb";
             }
         })
     }
@@ -610,7 +609,6 @@ function itemPopup(id) {
 
 function editItemX(id) {
     let input = document.getElementById(id);
-    let previousValue = input.value;
 
     if (input.value == "") {
         input.value = 1;
@@ -642,7 +640,7 @@ function editItemX(id) {
     .then(data=>{
         console.log(data.message);
         if (!data.result) {
-            input.value = previousValue;
+            input.value = "fromdb";
         }
     })
 }
