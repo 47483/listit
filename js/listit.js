@@ -487,8 +487,9 @@ function list(id) {
 
                 let checkBuilder = document.createElement("input");
                 checkBuilder.type = "checkbox";
+                checkBuilder.id = "checkBox-"+items[item].id;
                 checkBuilder.checked = items[item].status;
-                checkBuilder.onclick = function(){updateStatus(checkBuilder)};
+                checkBuilder.onclick = function(){updateStatus(checkBuilder,true)};
                 itemBuilder.appendChild(checkBuilder);
 
                 let nameBox = document.createElement("div");
@@ -607,8 +608,22 @@ function itemPopup(id) {
     deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "Delete "+itemName;
     deleteBtn.classList = "popupBtn";
-    deleteBtn.onmouseup = function(){delItem(id.split("-")[1]);};
+    deleteBtn.mouseup = function(){delItem(id.split("-")[1]);};
     popup.appendChild(deleteBtn);
+
+    completeBtn = document.createElement("button");
+
+    let checkBox = document.getElementById("checkBox-"+id.split("-")[1]);
+    if (checkBox.checked) {
+        completeBtn.innerHTML = "Restore "+itemName;
+
+    } else {
+        completeBtn.innerHTML = "Complete "+itemName;
+    }
+
+    completeBtn.classList = "popupBtn";
+    completeBtn.onmouseup = function(){updateStatus(checkBox,false);};
+    popup.appendChild(completeBtn);
 }
 
 function editItemX(id) {
@@ -708,16 +723,25 @@ function getPrevName(input) {
     }
 }
 
-function updateStatus(input) {
+function updateStatus(input,invert) {
     let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
     fd.append("itemid",input.parentElement.id.split("-")[1]);
 
-    let method = "restore";
+    let method = "complete";
 
     if (input.checked) {
-        method = "complete";
+        method = "restore";
+    }
+
+    if (invert) {
+        if (method == "complete") {
+            method = "restore";
+
+        } else {
+            method = "complete";
+        }
     }
 
     fetch("API/"+method,{
