@@ -317,7 +317,7 @@ function changeObjectName(id) {
         .then(data=>{
             console.log(data.message);
             if (!data.result) {
-                input.value = "fromdb";
+                getPrevName(input);
             }
         })
     } else if (input.className.split(" ").includes("itemName")) {
@@ -341,7 +341,7 @@ function changeObjectName(id) {
         .then(data=>{
             console.log(data.message);
             if (!data.result) {
-                input.value = "fromdb";
+                getPrevName(input);
             }
         })
     }
@@ -495,10 +495,10 @@ function list(id) {
                 nameBuilder.classList = "itemName";
                 nameBuilder.type = "text";
                 nameBuilder.value = items[item].name;
-                nameBuilder.id = "nameBox-"+items[item].id;
+                nameBuilder.id = "inameBox-"+items[item].id;
                 nameBuilder.autocomplete = "off";
-                textboxManager.push("nameBox-"+items[item].id);
-                nameBuilder.onblur = function(){changeObjectName("nameBox-"+items[item].id);};
+                textboxManager.push("inameBox-"+items[item].id);
+                nameBuilder.onblur = function(){changeObjectName("inameBox-"+items[item].id);};
                 nameBox.appendChild(nameBuilder);
 
                 let countBox = document.createElement("div");
@@ -640,7 +640,66 @@ function editItemX(id) {
     .then(data=>{
         console.log(data.message);
         if (!data.result) {
-            input.value = "fromdb";
+            getPrevName(input);
         }
     })
+}
+
+function getPrevName(input) {
+    console.log(input);
+    let type = input.id.split("-")[0];
+
+    if (type == "countBox" || type == "inameBox") {
+        fd = new FormData;
+        fd.append("email",localStorage.getItem("listitEmail"));
+        fd.append("password",localStorage.getItem("listitPassword"));
+        fd.append("itemid",input.id.split("-")[1]);
+
+        fetch("API/item",{
+            method:"POST",
+            body:fd
+        })
+        
+        .then(response=>{
+            if (response.status == 200) {
+                return response.json();
+            }
+        })
+        
+        .then(data=>{
+            console.log(data.message);
+            if (data.result) {
+                if (type == "countBox") {
+                    input.value = data.amount;
+
+                } else {
+                    input.value = data.name;
+                }
+            }
+        })
+
+    } else if (type == "nameBox") {
+        fd = new FormData;
+        fd.append("email",localStorage.getItem("listitEmail"));
+        fd.append("password",localStorage.getItem("listitPassword"));
+        fd.append("listid",input.id.split("-")[1]);
+
+        fetch("API/list",{
+            method:"POST",
+            body:fd
+        })
+        
+        .then(response=>{
+            if (response.status == 200) {
+                return response.json();
+            }
+        })
+        
+        .then(data=>{
+            console.log(data.message);
+            if (data.result) {
+                input.value = data.name;
+            }
+        })
+    }
 }
