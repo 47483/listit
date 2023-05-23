@@ -512,6 +512,7 @@ function list(id) {
                 countBuilder.type = "text";
                 countBuilder.value = items[item].amount;
                 countBuilder.id = "countBox-"+items[item].id;
+                countBuilder.onblur = function(){editItemX("countBox-"+items[item].id);};
                 textboxManager.push("countBox-"+items[item].id);
                 countBox.append(countBuilder);
             }
@@ -605,4 +606,43 @@ function itemPopup(id) {
     deleteBtn.classList = "popupBtn";
     deleteBtn.onmouseup = function(){delItem(id.split("-")[1]);};
     popup.appendChild(deleteBtn);
+}
+
+function editItemX(id) {
+    let input = document.getElementById(id);
+    let previousValue = input.value;
+
+    if (input.value == "") {
+        input.value = 1;
+
+    } else if (input.value < 1) {
+        input.value = 1;
+
+    } else if (input.value.length > 9) {
+        input.value = 999999999;
+    }
+
+    fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("itemid",id.split("-")[1]);
+    fd.append("count",input.value);
+    
+    fetch("API/edititemx",{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        console.log(data.message);
+        if (!data.result) {
+            input.value = previousValue;
+        }
+    })
 }
