@@ -576,7 +576,6 @@ function delItem(id) {
         if (data.result) {
             removeRemovable();
             pickPage();
-
         }
     })
 }
@@ -645,7 +644,7 @@ function itemPopup(id) {
     let deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "Delete "+itemName;
     deleteBtn.classList = "popupBtn";
-    deleteBtn.mouseup = function(){delItem(id.split("-")[1]);};
+    deleteBtn.onmouseup = function(){delItem(id.split("-")[1]);};
     popup.appendChild(deleteBtn);
 
     if (checkBox.checked) {
