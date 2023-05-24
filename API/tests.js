@@ -1,19 +1,25 @@
+//Set the url of where to run the tests
 var testurl = "localhost/listit/API/";
 
+//A function for testing the API endpoints
 function fetchTest(subject,testInfo,formData,expectedResult) {
+    //Add additional POST-data to put API in self-test mode
     formData.append("selftest",true);
 
+    //Fetch endpoint using POST-data
     fetch(testurl+subject,{
         method:"POST",
         body:formData
     })
 
+    //Wait for a valid response
     .then(response=>{
         if (response.status == 200) {
             return response.json();
         }
     })
 
+    //Create a table with result information and store it in a div related to the "subject"
     .then(data=>{
         let table = document.getElementById(subject);
         let testResult = document.createElement("tr");
@@ -58,7 +64,9 @@ function fetchTest(subject,testInfo,formData,expectedResult) {
     })
 }
 
+//A function for testing all user-related API endpoints
 function testUserfunctions() {
+    //Create prerequisites for storing the result data
     let title = document.createElement("h3");
     title.innerHTML = "User Functions";
     document.body.appendChild(title);
@@ -120,7 +128,9 @@ function testUserfunctions() {
     fetchTest("signup","Missing password.",fd,false);
 }
 
+//A function for testing all list-related API endpoints
 function testListfunctions() {
+    //Create prerequisites for storing the result data
     let title = document.createElement("h3");
     title.innerHTML = "List Functions";
     document.body.appendChild(title);
@@ -337,7 +347,9 @@ function testListfunctions() {
     fetchTest("dellist","Missing listid.",fd,false);
 }
 
+//A function for testing all item-related API endpoints
 function testItemfunctions() {
+    //Create prerequisites for storing the result data
     let title = document.createElement("h3");
     title.innerHTML = "Item Functions";
     document.body.appendChild(title);
@@ -829,6 +841,7 @@ function testItemfunctions() {
     fetchTest("restoreall","Missing listid.",fd,false);
 }
 
+//Call all test-functions
 testUserfunctions();
 testListfunctions();
 testItemfunctions();

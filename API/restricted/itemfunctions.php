@@ -1,10 +1,14 @@
 <?php
+//Require necessary functions
 require_once("universalfunctions.php");
 require_once("userfunctions.php");
 
+//A function for fetching a single item
 function item($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -15,8 +19,10 @@ function item($db) {
         return respond("No item id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Get item name, status and amount using provided info, if successful, return positive
             $stmt=$db->prepare('SELECT `itemname`,`status`,`amount` FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             $stmt->execute(["email"=>$userinfo[0], "itemid"=>filter_var($_POST["itemid"], FILTER_SANITIZE_SPECIAL_CHARS)]);
             
@@ -38,7 +44,9 @@ function item($db) {
     }
 }
 
+//A function for adding a new item to a list
 function additem($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     if ($userinfo[0] == null) {
