@@ -211,6 +211,12 @@ function lists() {
         if (data.result) {
             let slists = data.lists;
 
+            let backBtn = document.createElement("div");
+            backBtn.innerHTML = "Log Out";
+            backBtn.onclick = function(){logout();};
+            backBtn.classList = "removable backBtn";
+            document.body.appendChild(backBtn);
+
             let addBar = document.createElement("div");
             addBar.id = "addBar";
             addBar.classList = "removable";
@@ -441,9 +447,8 @@ function list(id) {
 
             let backBtn = document.createElement("div");
             backBtn.innerHTML = "Back To Lists";
-            backBtn.id = "backBtn";
             backBtn.onclick = function(){lists();};
-            backBtn.classList = "removable";
+            backBtn.classList = "removable backBtn";
             document.body.appendChild(backBtn);
 
             let items = data.items;

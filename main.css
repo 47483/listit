@@ -61,7 +61,7 @@
     word-wrap: break-word;
 }
 
-#backBtn {
+.backBtn {
     color: white;
     font-size: 2em;
     user-select: none;
