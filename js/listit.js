@@ -120,7 +120,7 @@ function managePresses() {
 
         } else {
             if (Date.now()-durations[pressable] < 500) {
-                list(pressable.split("-")[1]);
+                //list(pressable.split("-")[1]);
                 durations = {};
 
             } else {
