@@ -256,7 +256,7 @@ function listPopup(id) {
     document.body.style.overflowY = "hidden";
     listName = document.getElementById("nameBox-"+id.split("-")[1]).value;
 
-    popupBG = document.createElement("div");
+    let popupBG = document.createElement("div");
     popupBG.id = "popupBG";
 
     if (touchEnabled) {
@@ -268,21 +268,21 @@ function listPopup(id) {
 
     document.body.appendChild(popupBG);
 
-    popup = document.createElement("div");
+    let popup = document.createElement("div");
     popup.id = "popup";
     document.body.appendChild(popup);
 
-    title = document.createElement("p");
+    let title = document.createElement("p");
     title.innerHTML = "List Options";
     popup.appendChild(title);
 
-    openBtn = document.createElement("button");
+    let openBtn = document.createElement("button");
     openBtn.innerHTML = "Open "+listName;
     openBtn.classList = "popupBtn";
     openBtn.onmouseup = function(){list(id.split("-")[1]);};
     popup.appendChild(openBtn);
 
-    deleteBtn = document.createElement("button");
+    let deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "Delete "+listName;
     deleteBtn.classList = "popupBtn";
     deleteBtn.onmouseup = function(){delList(id.split("-")[1]);};
@@ -581,11 +581,36 @@ function delItem(id) {
     })
 }
 
+function deleteAll() {
+    let fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("listid",sessionStorage.getItem("targetList"));
+
+    fetch("API/deleteall",{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        console.log(data.message);
+        if (data.result) {
+            pickPage();
+        }
+    })
+}
+
 function itemPopup(id) {
     document.body.style.overflowY = "hidden";
     itemName = document.getElementById("inameBox-"+id.split("-")[1]).value;
 
-    popupBG = document.createElement("div");
+    let popupBG = document.createElement("div");
     popupBG.id = "popupBG";
 
     if (touchEnabled) {
@@ -597,33 +622,46 @@ function itemPopup(id) {
 
     document.body.appendChild(popupBG);
 
-    popup = document.createElement("div");
+    let popup = document.createElement("div");
     popup.id = "popup";
     document.body.appendChild(popup);
 
-    title = document.createElement("p");
+    let title = document.createElement("p");
     title.innerHTML = "Item Options";
     popup.appendChild(title);
 
-    deleteBtn = document.createElement("button");
+    let checkBox = document.getElementById("checkBox-"+id.split("-")[1]);
+
+    let completeBtn = document.createElement("button");
+    completeBtn.classList = "popupBtn";
+    completeBtn.onmouseup = function(){updateStatus(checkBox,false);};
+    popup.appendChild(completeBtn);
+
+    let completeallBtn = document.createElement("button");
+    completeallBtn.classList = "popupBtn";
+    completeallBtn.onmouseup = function(){updateStatusAll(checkBox);};
+    popup.appendChild(completeallBtn);
+
+    let deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "Delete "+itemName;
     deleteBtn.classList = "popupBtn";
     deleteBtn.mouseup = function(){delItem(id.split("-")[1]);};
     popup.appendChild(deleteBtn);
 
-    completeBtn = document.createElement("button");
-
-    let checkBox = document.getElementById("checkBox-"+id.split("-")[1]);
     if (checkBox.checked) {
         completeBtn.innerHTML = "Restore "+itemName;
+        completeallBtn.innerHTML = "Restore All";
+
+        let deleteallBtn = document.createElement("button");
+        deleteallBtn.classList = "popupBtn";
+        deleteallBtn.innerHTML = "Delete All";
+        deleteallBtn.onmouseup = function(){deleteAll();};
+        popup.appendChild(deleteallBtn);
 
     } else {
         completeBtn.innerHTML = "Complete "+itemName;
+        completeallBtn.innerHTML = "Complete All";
     }
-
-    completeBtn.classList = "popupBtn";
-    completeBtn.onmouseup = function(){updateStatus(checkBox,false);};
-    popup.appendChild(completeBtn);
 }
 
 function editItemX(id) {
@@ -665,7 +703,6 @@ function editItemX(id) {
 }
 
 function getPrevName(input) {
-    console.log(input);
     let type = input.id.split("-")[0];
 
     if (type == "countBox" || type == "inameBox") {
@@ -742,6 +779,37 @@ function updateStatus(input,invert) {
         } else {
             method = "complete";
         }
+    }
+
+    fetch("API/"+method,{
+        method:"POST",
+        body:fd
+    })
+    
+    .then(response=>{
+        if (response.status == 200) {
+            return response.json();
+        }
+    })
+    
+    .then(data=>{
+        console.log(data.message);
+        if (data.result) {
+            pickPage();
+        }
+    })
+}
+
+function updateStatusAll(input) {
+    let fd = new FormData;
+    fd.append("email",localStorage.getItem("listitEmail"));
+    fd.append("password",localStorage.getItem("listitPassword"));
+    fd.append("listid",sessionStorage.getItem("targetList"));
+
+    let method = "completeall";
+
+    if (input.checked) {
+        method = "restoreall";
     }
 
     fetch("API/"+method,{
