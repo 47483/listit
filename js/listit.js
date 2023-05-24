@@ -7,6 +7,7 @@ var textboxManager = [];
 var pressManager = {};
 var mouseDown = false;
 var delManager = {};
+var durations = {};
 
 setInterval(function(){update();}, 0);
 
@@ -118,6 +119,14 @@ function managePresses() {
             }
 
         } else {
+            if (Date.now()-durations[pressable] < 500) {
+                list(pressable.split("-")[1]);
+                durations = {};
+
+            } else {
+                durations = {};
+            }
+            
             if (delManager[pressable]) {
                 delete delManager[pressable];
                 if (pressable.split("-")[0] == "list") {
@@ -225,12 +234,12 @@ function lists() {
                 listBuilder.id = "list-"+slists[list].id;
                 
                 if (touchEnabled) {
-                    listBuilder.ontouchstart = function(e){pressManager["list-"+slists[list].id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+                    listBuilder.ontouchstart = function(e){pressManager["list-"+slists[list].id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()]; durations["list-"+slists[list].id] = Date.now();};
                     listBuilder.ontouchmove = function(e){pressManager["list-"+slists[list].id] = [pressManager["list-"+slists[list].id][0],pressManager["list-"+slists[list].id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
                     listBuilder.ontouchend = function(){pressManager["list-"+slists[list].id] = false;};
 
                 } else {
-                    listBuilder.onmousedown = function(e){pressManager["list-"+slists[list].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true;};
+                    listBuilder.onmousedown = function(e){pressManager["list-"+slists[list].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true; durations["list-"+slists[list].id] = Date.now();};
                 }
 
                 document.body.appendChild(listBuilder);
