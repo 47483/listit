@@ -59,7 +59,7 @@ function auth() {
 }
 
 function pickPage() {
-    if (sessionStorage.getItem("targetList")) {
+    if (sessionStorage.getItem("targetList") && sessionStorage.getItem("targetList") != "false") {
         list(sessionStorage.getItem("targetList"));
     
     } else {
