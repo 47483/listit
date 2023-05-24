@@ -192,7 +192,7 @@ function deleteall($db) {
     } else {
         $login = login($db);
         if (get_object_vars($login)["result"]) {
-            $stmt=$db->prepare('DELETE FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
+            $stmt=$db->prepare('DELETE FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid AND `status`=1');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("Deleted all items successfully.",True);
 
