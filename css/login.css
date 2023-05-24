@@ -1,0 +1,30 @@
+* {
+    text-align: center;
+}
+
+h1 {
+    color: hsl(125,100%,60%);
+    margin-top: 1em;
+    font-size: 6em;
+}
+
+main {
+    margin: 0.5em;
+}
+
+#errmsg {
+    color: red;
+    font-size: 1.5em;
+}
+
+.loginfield {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+    font-size: 1.5em;
+    user-select: none;
+    margin-bottom: 1em;
+    padding: 0.5em;
+    border: 0.25em solid hsl(125,100%,60%);
+    border-radius: 0.5em;
+}
