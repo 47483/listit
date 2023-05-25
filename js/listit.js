@@ -1,7 +1,14 @@
+//Run when page loaded
+window.onload = function() {
+    //Get a reference to the page wrapper
+    var wrapper = document.getElementById("wrapper");
+
+    //Check for stored destination data, load correct page
+    pickPage();
+}
+
 //Authorize user, redirect if response is negative
 auth();
-//Check for stored destination data, load correct page
-pickPage();
 
 //A bool to keep track if the device uses mouse or touch
 var touchEnabled = 'ontouchstart' in window;
@@ -34,6 +41,10 @@ document.addEventListener("mousemove",function(e){
             }
         }
     }
+})
+
+document.addEventListener("click",function(e){
+    console.log(e.target);
 })
 
 //A function that will be called continuously
@@ -286,13 +297,13 @@ function lists() {
             backBtn.innerHTML = "Log Out";
             backBtn.onclick = function(){logout();};
             backBtn.classList = "removable backBtn";
-            document.body.appendChild(backBtn);
+            wrapper.appendChild(backBtn);
 
             //Create a bar with a input and a button for adding a new list
             let addBar = document.createElement("div");
             addBar.id = "addBar";
             addBar.classList = "removable";
-            document.body.appendChild(addBar);
+            wrapper.appendChild(addBar);
 
             let addInput = document.createElement("input");
             addInput.id = "addInput";
@@ -533,14 +544,14 @@ function list(id) {
             listTitle.innerHTML = data.name;
             listTitle.id = "listTitle";
             listTitle.classList = "removable";
-            document.body.appendChild(listTitle);
+            wrapper.appendChild(listTitle);
 
             //Create a button for returning to the overview-page
             let backBtn = document.createElement("div");
             backBtn.innerHTML = "Back To Lists";
             backBtn.onclick = function(){lists();};
             backBtn.classList = "removable backBtn";
-            document.body.appendChild(backBtn);
+            wrapper.appendChild(backBtn);
 
             //Create a list of all items within the list
             let items = data.items;
@@ -549,7 +560,7 @@ function list(id) {
             let addBar = document.createElement("div");
             addBar.id = "addBar";
             addBar.classList = "removable";
-            document.body.appendChild(addBar);
+            wrapper.appendChild(addBar);
 
             let addInput = document.createElement("input");
             addInput.id = "addInput";
@@ -567,11 +578,11 @@ function list(id) {
             let incomplete = document.createElement("div");
             incomplete.classList = "removable";
             incomplete.id = "incomplete";
-            document.body.appendChild(incomplete);
+            wrapper.appendChild(incomplete);
             let complete = document.createElement("div");
             complete.classList = "removable";
             complete.id = "complete";
-            document.body.appendChild(complete);
+            wrapper.appendChild(complete);
 
             //Iterate over all items in list
             for (let item in items) {
@@ -999,7 +1010,7 @@ function buildItem(id,name,status,amount) {
     checkBuilder.type = "checkbox";
     checkBuilder.id = "checkBox-"+id;
     checkBuilder.checked = status;
-    checkBuilder.onclick = function(){updateStatus(checkBuilder,true)};
+    checkBuilder.onclick = function(){updateStatus(checkBuilder,true); console.log("yep");};
     itemBuilder.appendChild(checkBuilder);
 
     //Create a dynamic name-box for the item
@@ -1050,7 +1061,7 @@ function buildList(id,name) {
         listBuilder.onmousedown = function(e){pressManager["list-"+id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true; durations["list-"+id] = Date.now();};
     }
 
-    document.body.appendChild(listBuilder);
+    wrapper.appendChild(listBuilder);
 
     //Create a dynamic editable name for the list div
     let nameBuilder = document.createElement("input");
