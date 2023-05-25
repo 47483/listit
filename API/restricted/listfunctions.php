@@ -111,7 +111,9 @@ function addlist($db) {
             //Add new list, return accordingly
             $stmt=$db->prepare('INSERT INTO `lists` (`user`,`listname`) VALUES ((SELECT `userid` FROM `users` WHERE `email`=:email),:listname)');
             if ($stmt->execute(["email"=>$userinfo[0],"listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
-                return respond("List added successfully.",True);
+                $response = respond("List added successfully.",True);
+                $response->id = $db->lastInsertId();
+                return $response;
 
             } else {
                 return respond("Failed to add list.",False);

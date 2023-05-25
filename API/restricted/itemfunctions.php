@@ -73,7 +73,9 @@ function additem($db) {
             if ($row=$stmt->fetch()) {
                 $stmt=$db->prepare('INSERT INTO `items` (`user`,`list`,`itemname`,`status`,`amount`) VALUES ((SELECT `userid` FROM `users` WHERE `email`=:email),:listid,:itemname,0,1)');
                 if ($stmt->execute(["email"=>$userinfo[0],"listid"=>$listid,"itemname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
-                    return respond("Item added successfully.",True);
+                    $response = respond("Item added successfully.",True);
+                    $response->id = $db->lastInsertId();
+                    return $response;
     
                 } else {
                     return respond("Failed to add item.",False);
