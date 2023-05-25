@@ -22,7 +22,7 @@ function item($db) {
         //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
-            //Get item name, status and amount using provided info, if successful, return positive
+            //Get item name, status and amount using provided info, return accordingly
             $stmt=$db->prepare('SELECT `itemname`,`status`,`amount` FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             $stmt->execute(["email"=>$userinfo[0], "itemid"=>filter_var($_POST["itemid"], FILTER_SANITIZE_SPECIAL_CHARS)]);
             
@@ -49,6 +49,7 @@ function additem($db) {
     //Get user email and password
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -62,8 +63,10 @@ function additem($db) {
         return respond("No list id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Create a new item, return accordingly
             $listid = filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS);
             $stmt=$db->prepare('SELECT `listid` FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
             $stmt->execute(["email"=>$userinfo[0],"listid"=>$listid]);
@@ -86,9 +89,11 @@ function additem($db) {
     }
 }
 
+//A function for editing a single item
 function edititem($db) {
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -102,8 +107,10 @@ function edititem($db) {
         return respond("No item id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Update item name with params, return accordingly
             $stmt=$db->prepare('UPDATE `items` SET `itemname`=:itemname WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["itemname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("Item edited successfully.",True);
@@ -118,9 +125,11 @@ function edititem($db) {
     }
 }
 
+//A function for editing a single items amount
 function edititemx($db) {
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -134,8 +143,10 @@ function edititemx($db) {
         return respond("No item id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Update item amount with params, return accordingly
             $count = filter_var($_POST["count"],FILTER_SANITIZE_SPECIAL_CHARS);
             if ($count >= 0 && filter_var($count,FILTER_VALIDATE_INT)) {
                 $stmt=$db->prepare('UPDATE `items` SET `amount`=:count WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
@@ -156,9 +167,11 @@ function edititemx($db) {
     }
 }
 
+//A function for deleting a single item
 function delitem($db) {
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -169,8 +182,10 @@ function delitem($db) {
         return respond("No item id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Delete item from table, return accordingly
             $stmt=$db->prepare('DELETE FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("Item deleted successfully.",True);
@@ -185,9 +200,11 @@ function delitem($db) {
     }
 }
 
+//A function for deleting all completed items in list
 function deleteall($db) {
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -198,8 +215,10 @@ function deleteall($db) {
         return respond("No list id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Delete all status 1 items, return accordingly
             $stmt=$db->prepare('DELETE FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid AND `status`=1');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("Deleted all items successfully.",True);
@@ -214,9 +233,11 @@ function deleteall($db) {
     }
 }
 
+//A function for completing a single item
 function complete($db) {
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -227,8 +248,10 @@ function complete($db) {
         return respond("No item id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Set item status to 1, return accordingly
             $stmt=$db->prepare('UPDATE `items` SET `status`=1 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("Item completed successfully.",True);
@@ -243,9 +266,11 @@ function complete($db) {
     }
 }
 
+//A function for completing all items in list
 function completeall($db) {
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -256,8 +281,10 @@ function completeall($db) {
         return respond("No list id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Set status for all items in list to 1, return accordingly
             $stmt=$db->prepare('UPDATE `items` SET `status`=1 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("Items completed successfully.",True);
@@ -272,9 +299,11 @@ function completeall($db) {
     }
 }
 
+//A function for restoring a single completed item
 function restore($db) {
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -285,8 +314,10 @@ function restore($db) {
         return respond("No item id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Set item status to 0, return accordingly
             $stmt=$db->prepare('UPDATE `items` SET `status`=0 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `itemid`=:itemid');
             if ($stmt->execute(["email"=>$userinfo[0],"itemid"=>filter_var($_POST["itemid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("Item restored successfully.",True);
@@ -301,9 +332,11 @@ function restore($db) {
     }
 }
 
+//A function for restoring all completed items in list
 function restoreall($db) {
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -314,8 +347,10 @@ function restoreall($db) {
         return respond("No list id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Set status for all items in list to 0, return accordingly
             $stmt=$db->prepare('UPDATE `items` SET `status`=0 WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("Items restored successfully.",True);
