@@ -75,6 +75,7 @@ function auth() {
 
 //A function for selecting the page which to display
 function pickPage() {
+    removeRemovable();
     //Check for a target list, and if it exists show it
     if (sessionStorage.getItem("targetList") && sessionStorage.getItem("targetList") != "false") {
         list(sessionStorage.getItem("targetList"));
