@@ -1,8 +1,11 @@
+//A function for logging in/signing up the user
 function loginsignup(method) {
+    //Get user-provided information from fields
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
     let errmsg = document.getElementById("errmsg");
     
+    //Check if all required fields are supplied, else show errormessage
     if (email == "") {
         errmsg.innerHTML = "An email is required.";
 
@@ -10,6 +13,7 @@ function loginsignup(method) {
         errmsg.innerHTML = "A password is required.";
 
     } else {
+        //Make a fetch request to the API using correct method and params
         fd = new FormData;
         fd.append("email",email);
         fd.append("password",password);
@@ -19,12 +23,14 @@ function loginsignup(method) {
             body:fd
         })
 
+        //If response is valid continue
         .then(response=>{
             if (response.status == 200) {
                 return response.json();
             }
         })
 
+        //Store the correct user-info if response is positive, else show errormessage
         .then(data=>{
             if (data.result) {
                 localStorage.setItem("listitEmail", email);
@@ -39,7 +45,9 @@ function loginsignup(method) {
     }
 }
 
+//A function for authorizing the user using stored information
 function auth() {
+    //Make a fetch request using the stored data as params
     fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
@@ -49,12 +57,14 @@ function auth() {
         body:fd
     })
     
+    //If response is valid continue
     .then(response=>{
         if (response.status == 200) {
             return response.json();
         }
     })
     
+    //If authorization returns positive, send user to main page, else empty stored data.
     .then(data=>{
         if (data.result) {
             window.location.replace("listit.html");
@@ -66,4 +76,5 @@ function auth() {
     })
 }
 
+//Call auth to automatically send user to page if logged in
 auth();
