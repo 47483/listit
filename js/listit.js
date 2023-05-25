@@ -871,11 +871,14 @@ function getPrevName(input) {
 
 //A function for updating the status of an item
 function updateStatus(input,invert) {
+    //Get the actual id of the object
+    let id = input.parentElement.id.split("-")[1];
+
     //Create formdata for the fetch using provided and stored params
     let fd = new FormData;
     fd.append("email",localStorage.getItem("listitEmail"));
     fd.append("password",localStorage.getItem("listitPassword"));
-    fd.append("itemid",input.parentElement.id.split("-")[1]);
+    fd.append("itemid",id);
 
     //Set the method to the status of the input (checkbox)
     let method = "complete";
@@ -892,6 +895,11 @@ function updateStatus(input,invert) {
         } else {
             method = "complete";
         }
+    }
+
+    let status = 0;
+    if (method == "complete") {
+        status = 1;
     }
 
     //Fetch to the correct API endpoint using the formdata
@@ -912,8 +920,10 @@ function updateStatus(input,invert) {
         console.log(data.message);
         //Check if operation was successful
         if (data.result) {
-            //Reload page
-            pickPage();
+            //Replace the item
+            buildItem(id,document.getElementById("inameBox-"+id).value,status,document.getElementById("countBox-"+id).value);
+            input.parentElement.remove();
+            deletePopup();
         }
     })
 }
