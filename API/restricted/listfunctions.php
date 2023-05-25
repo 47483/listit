@@ -1,10 +1,14 @@
 <?php
+//Require necessary functions
 require_once("universalfunctions.php");
 require_once("userfunctions.php");
 
+//A function for fetching all lists for user
 function lists($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -12,8 +16,10 @@ function lists($db) {
         return respond("No password provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Fetch listid and listname for all lists, return accordingly
             $stmt=$db->prepare('SELECT `listid`,`listname` FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email)');
             $stmt->execute(["email"=>$userinfo[0]]);
             $lists = array();
@@ -33,9 +39,12 @@ function lists($db) {
     }
 }
 
+//A function for fetching all items of a list
 function api_list($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -46,8 +55,10 @@ function api_list($db) {
         return respond("No list id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Get all itemids, itemnames, statuses and amounts in the list, return accordingly
             $stmt=$db->prepare('SELECT `itemid`,`itemname`,`status`,`amount` FROM `items` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `list`=:listid');
             $stmt->execute(["email"=>$userinfo[0], "listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)]);
             $items = array();
@@ -78,9 +89,12 @@ function api_list($db) {
     }
 }
 
+//A function for adding a new list
 function addlist($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -91,8 +105,10 @@ function addlist($db) {
         return respond("No list name provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Add new list, return accordingly
             $stmt=$db->prepare('INSERT INTO `lists` (`user`,`listname`) VALUES ((SELECT `userid` FROM `users` WHERE `email`=:email),:listname)');
             if ($stmt->execute(["email"=>$userinfo[0],"listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("List added successfully.",True);
@@ -107,9 +123,12 @@ function addlist($db) {
     }
 }
 
+//A function for editing a list
 function editlist($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -123,8 +142,10 @@ function editlist($db) {
         return respond("No list id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Update name using provided params, return accordingly
             $stmt=$db->prepare('UPDATE `lists` SET `listname`=:listname WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
             if ($stmt->execute(["listname"=>filter_var($_POST["name"],FILTER_SANITIZE_SPECIAL_CHARS),"email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("List edited successfully.",True);
@@ -139,9 +160,12 @@ function editlist($db) {
     }
 }
 
+//A function for deleting a list
 function dellist($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
+    //Make sure all API-inputs are set, else return negative
     if ($userinfo[0] == null) {
         return respond("A user email is required.",false);
 
@@ -152,8 +176,10 @@ function dellist($db) {
         return respond("No list id provided.",false);
 
     } else {
+        //Try to log in user with provided info, if unsuccessful, return negative
         $login = login($db);
         if (get_object_vars($login)["result"]) {
+            //Delete list, return accordingly
             $stmt=$db->prepare('DELETE FROM `lists` WHERE `user` IN (SELECT `userid` FROM `users` WHERE `email`=:email) AND `listid`=:listid');
             if ($stmt->execute(["email"=>$userinfo[0],"listid"=>filter_var($_POST["listid"], FILTER_SANITIZE_SPECIAL_CHARS)])) {
                 return respond("List deleted successfully.",True);

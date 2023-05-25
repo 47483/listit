@@ -91,6 +91,7 @@ function additem($db) {
 
 //A function for editing a single item
 function edititem($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     //Make sure all API-inputs are set, else return negative
@@ -127,6 +128,7 @@ function edititem($db) {
 
 //A function for editing a single items amount
 function edititemx($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     //Make sure all API-inputs are set, else return negative
@@ -169,6 +171,7 @@ function edititemx($db) {
 
 //A function for deleting a single item
 function delitem($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     //Make sure all API-inputs are set, else return negative
@@ -202,6 +205,7 @@ function delitem($db) {
 
 //A function for deleting all completed items in list
 function deleteall($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     //Make sure all API-inputs are set, else return negative
@@ -235,6 +239,7 @@ function deleteall($db) {
 
 //A function for completing a single item
 function complete($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     //Make sure all API-inputs are set, else return negative
@@ -268,6 +273,7 @@ function complete($db) {
 
 //A function for completing all items in list
 function completeall($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     //Make sure all API-inputs are set, else return negative
@@ -301,6 +307,7 @@ function completeall($db) {
 
 //A function for restoring a single completed item
 function restore($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     //Make sure all API-inputs are set, else return negative
@@ -334,6 +341,7 @@ function restore($db) {
 
 //A function for restoring all completed items in list
 function restoreall($db) {
+    //Get user email and password
     $userinfo = userinfo();
 
     //Make sure all API-inputs are set, else return negative
