@@ -194,9 +194,8 @@ function resetManagers() {
 
 //A function for removing all "removable" elements from the scene
 function removeRemovable() {
-    //Reset some managers
-    textboxManager = [];
-    pressManager = {};
+    //Reset managers
+    resetManagers();
     //Remove all elements with class "removable"
     let remove = document.querySelectorAll(".removable");
     remove.forEach(element => {
@@ -484,9 +483,35 @@ function addList() {
         console.log(data.message);
         //Check if operation was successful
         if (data.result) {
-            //Reload the page
-            removeRemovable();
-            pickPage();
+            //Create a div element to store list info
+            let listBuilder = document.createElement("div");
+            listBuilder.classList = "removable list";
+            listBuilder.id = "list-"+data.id;
+            
+            //Check if mode is touchscreen and add appropriate event listeners
+            if (touchEnabled) {
+                listBuilder.ontouchstart = function(e){pressManager["list-"+data.id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()]; durations["list-"+data.id] = Date.now();};
+                listBuilder.ontouchmove = function(e){pressManager["list-"+data.id] = [pressManager["list-"+data.id][0],pressManager["list-"+data.id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+                listBuilder.ontouchend = function(){pressManager["list-"+data.id] = false;};
+
+            } else {
+                listBuilder.onmousedown = function(e){pressManager["list-"+data.id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true; durations["list-"+data.id] = Date.now();};
+            }
+
+            document.body.appendChild(listBuilder);
+
+            //Create a dynamic editable name for the list div
+            let nameBuilder = document.createElement("input");
+            nameBuilder.classList = "listName";
+            nameBuilder.type = "text";
+            nameBuilder.value = document.getElementById("addInput").value;
+            nameBuilder.id = "nameBox-"+data.id;
+            nameBuilder.autocomplete = "off";
+            textboxManager.push("nameBox-"+data.id);
+            nameBuilder.onblur = function(){changeObjectName("nameBox-"+data.id);};
+            listBuilder.appendChild(nameBuilder);
+
+            document.getElementById("addInput").value = "";
         }
     })
 }
@@ -591,9 +616,11 @@ function list(id) {
             //Create parent divs for storing complete and incomplete items separately
             let incomplete = document.createElement("div");
             incomplete.classList = "removable";
+            incomplete.id = "incomplete";
             document.body.appendChild(incomplete);
             let complete = document.createElement("div");
             complete.classList = "removable";
+            complete.id = "complete";
             document.body.appendChild(complete);
 
             //Iterate over all items in list
@@ -694,9 +721,62 @@ function addItem(listid) {
         console.log(data.message);
         //If operation successful
         if (data.result) {
-            //Reload page
-            removeRemovable();
-            pickPage();
+            //Create new item
+            let itemBuilder = document.createElement("div");
+            itemBuilder.id = "item-"+data.id;
+            
+            //Add correct eventlisteners to the div depending on touch being enabled or not
+            if (touchEnabled) {
+                itemBuilder.ontouchstart = function(e){pressManager["item-"+data.id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+                itemBuilder.ontouchmove = function(e){pressManager["item-"+data.id] = [pressManager["item-"+data.id][0],pressManager["item-"+data.id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+                itemBuilder.ontouchend = function(){pressManager["item-"+data.id] = false;};
+
+            } else {
+                itemBuilder.onmousedown = function(e){pressManager["item-"+items[item].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true;};
+            }
+
+            itemBuilder.classList = "removable item";
+            document.getElementById("incomplete").appendChild(itemBuilder);
+
+            //Create a checkbox for completing/restoring the item
+            let checkBuilder = document.createElement("input");
+            checkBuilder.type = "checkbox";
+            checkBuilder.id = "checkBox-"+data.id;
+            checkBuilder.checked = 0;
+            checkBuilder.onclick = function(){updateStatus(checkBuilder,true)};
+            itemBuilder.appendChild(checkBuilder);
+
+            //Create a dynamic name-box for the item
+            let nameBox = document.createElement("div");
+            nameBox.classList = "iBMaj";
+            itemBuilder.appendChild(nameBox);
+
+            let nameBuilder = document.createElement("input");
+            nameBuilder.classList = "itemName";
+            nameBuilder.type = "text";
+            nameBuilder.value = document.getElementById("addInput").value;
+            nameBuilder.id = "inameBox-"+data.id;
+            nameBuilder.autocomplete = "off";
+            textboxManager.push("inameBox-"+data.id);
+            nameBuilder.onblur = function(){changeObjectName("inameBox-"+data.id);};
+            nameBox.appendChild(nameBuilder);
+
+            //Create a dynamic amount-box for the item
+            let countBox = document.createElement("div");
+            countBox.classList = "iBMin";
+            countBox.innerHTML = "x";
+            itemBuilder.appendChild(countBox);
+
+            let countBuilder = document.createElement("input");
+            countBuilder.classList = "itemName";
+            countBuilder.type = "text";
+            countBuilder.value = 1;
+            countBuilder.id = "countBox-"+data.id;
+            countBuilder.onblur = function(){editItemX("countBox-"+data.id);};
+            textboxManager.push("countBox-"+data.id);
+            countBox.append(countBuilder);
+
+            document.getElementById("addInput").value = "";
         }
     })
 }
