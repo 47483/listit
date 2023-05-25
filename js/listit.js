@@ -307,33 +307,8 @@ function lists() {
 
             //Iterate over all lists
             for (let list in slists) {
-                //Create a div element to store list info
-                let listBuilder = document.createElement("div");
-                listBuilder.classList = "removable list";
-                listBuilder.id = "list-"+slists[list].id;
-                
-                //Check if mode is touchscreen and add appropriate event listeners
-                if (touchEnabled) {
-                    listBuilder.ontouchstart = function(e){pressManager["list-"+slists[list].id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()]; durations["list-"+slists[list].id] = Date.now();};
-                    listBuilder.ontouchmove = function(e){pressManager["list-"+slists[list].id] = [pressManager["list-"+slists[list].id][0],pressManager["list-"+slists[list].id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
-                    listBuilder.ontouchend = function(){pressManager["list-"+slists[list].id] = false;};
-
-                } else {
-                    listBuilder.onmousedown = function(e){pressManager["list-"+slists[list].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true; durations["list-"+slists[list].id] = Date.now();};
-                }
-
-                document.body.appendChild(listBuilder);
-
-                //Create a dynamic editable name for the list div
-                let nameBuilder = document.createElement("input");
-                nameBuilder.classList = "listName";
-                nameBuilder.type = "text";
-                nameBuilder.value = slists[list].name;
-                nameBuilder.id = "nameBox-"+slists[list].id;
-                nameBuilder.autocomplete = "off";
-                textboxManager.push("nameBox-"+slists[list].id);
-                nameBuilder.onblur = function(){changeObjectName("nameBox-"+slists[list].id);};
-                listBuilder.appendChild(nameBuilder);
+                //Create list element
+                buildList(slists[list].id,slists[list].name);
             }
 
         } else {
@@ -483,34 +458,8 @@ function addList() {
         console.log(data.message);
         //Check if operation was successful
         if (data.result) {
-            //Create a div element to store list info
-            let listBuilder = document.createElement("div");
-            listBuilder.classList = "removable list";
-            listBuilder.id = "list-"+data.id;
-            
-            //Check if mode is touchscreen and add appropriate event listeners
-            if (touchEnabled) {
-                listBuilder.ontouchstart = function(e){pressManager["list-"+data.id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()]; durations["list-"+data.id] = Date.now();};
-                listBuilder.ontouchmove = function(e){pressManager["list-"+data.id] = [pressManager["list-"+data.id][0],pressManager["list-"+data.id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
-                listBuilder.ontouchend = function(){pressManager["list-"+data.id] = false;};
-
-            } else {
-                listBuilder.onmousedown = function(e){pressManager["list-"+data.id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true; durations["list-"+data.id] = Date.now();};
-            }
-
-            document.body.appendChild(listBuilder);
-
-            //Create a dynamic editable name for the list div
-            let nameBuilder = document.createElement("input");
-            nameBuilder.classList = "listName";
-            nameBuilder.type = "text";
-            nameBuilder.value = document.getElementById("addInput").value;
-            nameBuilder.id = "nameBox-"+data.id;
-            nameBuilder.autocomplete = "off";
-            textboxManager.push("nameBox-"+data.id);
-            nameBuilder.onblur = function(){changeObjectName("nameBox-"+data.id);};
-            listBuilder.appendChild(nameBuilder);
-
+            //Create a list element
+            buildList(data.id,document.getElementById("addInput").value);
             document.getElementById("addInput").value = "";
         }
     })
@@ -625,67 +574,7 @@ function list(id) {
 
             //Iterate over all items in list
             for (let item in items) {
-                //Create a div for each item
-                let itemBuilder = document.createElement("div");
-                itemBuilder.id = "item-"+items[item].id;
-                
-                //Add correct eventlisteners to the div depending on touch being enabled or not
-                if (touchEnabled) {
-                    itemBuilder.ontouchstart = function(e){pressManager["item-"+items[item].id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
-                    itemBuilder.ontouchmove = function(e){pressManager["item-"+items[item].id] = [pressManager["item-"+items[item].id][0],pressManager["item-"+items[item].id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
-                    itemBuilder.ontouchend = function(){pressManager["item-"+items[item].id] = false;};
-
-                } else {
-                    itemBuilder.onmousedown = function(e){pressManager["item-"+items[item].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true;};
-                }
-
-                //Check if item is completed or not and put the element in correct parent div
-                if (items[item].status == true) {
-                    itemBuilder.classList = "removable item complete";
-                    complete.appendChild(itemBuilder);
-
-                } else {
-                    itemBuilder.classList = "removable item";
-                    incomplete.appendChild(itemBuilder);
-                }
-
-                //Create a checkbox for completing/restoring the item
-                let checkBuilder = document.createElement("input");
-                checkBuilder.type = "checkbox";
-                checkBuilder.id = "checkBox-"+items[item].id;
-                checkBuilder.checked = items[item].status;
-                checkBuilder.onclick = function(){updateStatus(checkBuilder,true)};
-                itemBuilder.appendChild(checkBuilder);
-
-                //Create a dynamic name-box for the item
-                let nameBox = document.createElement("div");
-                nameBox.classList = "iBMaj";
-                itemBuilder.appendChild(nameBox);
-
-                let nameBuilder = document.createElement("input");
-                nameBuilder.classList = "itemName";
-                nameBuilder.type = "text";
-                nameBuilder.value = items[item].name;
-                nameBuilder.id = "inameBox-"+items[item].id;
-                nameBuilder.autocomplete = "off";
-                textboxManager.push("inameBox-"+items[item].id);
-                nameBuilder.onblur = function(){changeObjectName("inameBox-"+items[item].id);};
-                nameBox.appendChild(nameBuilder);
-
-                //Create a dynamic amount-box for the item
-                let countBox = document.createElement("div");
-                countBox.classList = "iBMin";
-                countBox.innerHTML = "x";
-                itemBuilder.appendChild(countBox);
-
-                let countBuilder = document.createElement("input");
-                countBuilder.classList = "itemName";
-                countBuilder.type = "text";
-                countBuilder.value = items[item].amount;
-                countBuilder.id = "countBox-"+items[item].id;
-                countBuilder.onblur = function(){editItemX("countBox-"+items[item].id);};
-                textboxManager.push("countBox-"+items[item].id);
-                countBox.append(countBuilder);
+                buildItem(items[item].id,items[item].name,items[item].status,items[item].amount);
             }
 
         } else {
@@ -721,61 +610,8 @@ function addItem(listid) {
         console.log(data.message);
         //If operation successful
         if (data.result) {
-            //Create new item
-            let itemBuilder = document.createElement("div");
-            itemBuilder.id = "item-"+data.id;
-            
-            //Add correct eventlisteners to the div depending on touch being enabled or not
-            if (touchEnabled) {
-                itemBuilder.ontouchstart = function(e){pressManager["item-"+data.id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
-                itemBuilder.ontouchmove = function(e){pressManager["item-"+data.id] = [pressManager["item-"+data.id][0],pressManager["item-"+data.id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
-                itemBuilder.ontouchend = function(){pressManager["item-"+data.id] = false;};
-
-            } else {
-                itemBuilder.onmousedown = function(e){pressManager["item-"+items[item].id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true;};
-            }
-
-            itemBuilder.classList = "removable item";
-            document.getElementById("incomplete").appendChild(itemBuilder);
-
-            //Create a checkbox for completing/restoring the item
-            let checkBuilder = document.createElement("input");
-            checkBuilder.type = "checkbox";
-            checkBuilder.id = "checkBox-"+data.id;
-            checkBuilder.checked = 0;
-            checkBuilder.onclick = function(){updateStatus(checkBuilder,true)};
-            itemBuilder.appendChild(checkBuilder);
-
-            //Create a dynamic name-box for the item
-            let nameBox = document.createElement("div");
-            nameBox.classList = "iBMaj";
-            itemBuilder.appendChild(nameBox);
-
-            let nameBuilder = document.createElement("input");
-            nameBuilder.classList = "itemName";
-            nameBuilder.type = "text";
-            nameBuilder.value = document.getElementById("addInput").value;
-            nameBuilder.id = "inameBox-"+data.id;
-            nameBuilder.autocomplete = "off";
-            textboxManager.push("inameBox-"+data.id);
-            nameBuilder.onblur = function(){changeObjectName("inameBox-"+data.id);};
-            nameBox.appendChild(nameBuilder);
-
-            //Create a dynamic amount-box for the item
-            let countBox = document.createElement("div");
-            countBox.classList = "iBMin";
-            countBox.innerHTML = "x";
-            itemBuilder.appendChild(countBox);
-
-            let countBuilder = document.createElement("input");
-            countBuilder.classList = "itemName";
-            countBuilder.type = "text";
-            countBuilder.value = 1;
-            countBuilder.id = "countBox-"+data.id;
-            countBuilder.onblur = function(){editItemX("countBox-"+data.id);};
-            textboxManager.push("countBox-"+data.id);
-            countBox.append(countBuilder);
-
+            //Create new item using provided params
+            buildItem(data.id,document.getElementById("addInput"),0,1);
             document.getElementById("addInput").value = "";
         }
     })
@@ -1119,4 +955,100 @@ function updateStatusAll(input) {
             pickPage();
         }
     })
+}
+
+//A function for building item elements
+function buildItem(id,name,status,amount) {
+    //Create new item
+    let itemBuilder = document.createElement("div");
+    itemBuilder.id = "item-"+id;
+    
+    //Add correct eventlisteners to the div depending on touch being enabled or not
+    if (touchEnabled) {
+        itemBuilder.ontouchstart = function(e){pressManager["item-"+id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+        itemBuilder.ontouchmove = function(e){pressManager["item-"+id] = [pressManager["item-"+id][0],pressManager["item-"+id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+        itemBuilder.ontouchend = function(){pressManager["item-"+id] = false;};
+
+    } else {
+        itemBuilder.onmousedown = function(e){pressManager["item-"+id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true;};
+    }
+
+    //Check if item is completed or not and put the element in correct parent div
+    if (status == true) {
+        itemBuilder.classList = "removable item complete";
+        complete.appendChild(itemBuilder);
+
+    } else {
+        itemBuilder.classList = "removable item";
+        incomplete.appendChild(itemBuilder);
+    }
+
+    //Create a checkbox for completing/restoring the item
+    let checkBuilder = document.createElement("input");
+    checkBuilder.type = "checkbox";
+    checkBuilder.id = "checkBox-"+id;
+    checkBuilder.checked = status;
+    checkBuilder.onclick = function(){updateStatus(checkBuilder,true)};
+    itemBuilder.appendChild(checkBuilder);
+
+    //Create a dynamic name-box for the item
+    let nameBox = document.createElement("div");
+    nameBox.classList = "iBMaj";
+    itemBuilder.appendChild(nameBox);
+
+    let nameBuilder = document.createElement("input");
+    nameBuilder.classList = "itemName";
+    nameBuilder.type = "text";
+    nameBuilder.value = name;
+    nameBuilder.id = "inameBox-"+id;
+    nameBuilder.autocomplete = "off";
+    textboxManager.push("inameBox-"+id);
+    nameBuilder.onblur = function(){changeObjectName("inameBox-"+id);};
+    nameBox.appendChild(nameBuilder);
+
+    //Create a dynamic amount-box for the item
+    let countBox = document.createElement("div");
+    countBox.classList = "iBMin";
+    countBox.innerHTML = "x";
+    itemBuilder.appendChild(countBox);
+
+    let countBuilder = document.createElement("input");
+    countBuilder.classList = "itemName";
+    countBuilder.type = "text";
+    countBuilder.value = amount;
+    countBuilder.id = "countBox-"+id;
+    countBuilder.onblur = function(){editItemX("countBox-"+id);};
+    textboxManager.push("countBox-"+id);
+    countBox.append(countBuilder);
+}
+
+//A function for building list elements
+function buildList(id,name) {
+    //Create a div element to store list info
+    let listBuilder = document.createElement("div");
+    listBuilder.classList = "removable list";
+    listBuilder.id = "list-"+id;
+    
+    //Check if mode is touchscreen and add appropriate event listeners
+    if (touchEnabled) {
+        listBuilder.ontouchstart = function(e){pressManager["list-"+id] = [e.touches[0].clientX,e.touches[0].clientY,e.touches[0].clientX,e.touches[0].clientY,Date.now()]; durations["list-"+id] = Date.now();};
+        listBuilder.ontouchmove = function(e){pressManager["list-"+id] = [pressManager["list-"+id][0],pressManager["list-"+id][1],e.touches[0].clientX,e.touches[0].clientY,Date.now()];};
+        listBuilder.ontouchend = function(){pressManager["list-"+id] = false;};
+
+    } else {
+        listBuilder.onmousedown = function(e){pressManager["list-"+id] = [e.pageX,e.pageY,e.pageX,e.pageY,Date.now()]; mouseDown = true; durations["list-"+id] = Date.now();};
+    }
+
+    document.body.appendChild(listBuilder);
+
+    //Create a dynamic editable name for the list div
+    let nameBuilder = document.createElement("input");
+    nameBuilder.classList = "listName";
+    nameBuilder.type = "text";
+    nameBuilder.value = name;
+    nameBuilder.id = "nameBox-"+id;
+    nameBuilder.autocomplete = "off";
+    textboxManager.push("nameBox-"+id);
+    nameBuilder.onblur = function(){changeObjectName("nameBox-"+id);};
+    listBuilder.appendChild(nameBuilder);
 }
