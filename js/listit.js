@@ -185,6 +185,13 @@ function managePresses() {
     }
 }
 
+function resetManagers() {
+    textboxManager = [];
+    pressManager = {};
+    delManager = {};
+    durations = {};
+}
+
 //A function for removing all "removable" elements from the scene
 function removeRemovable() {
     //Reset some managers
@@ -480,7 +487,6 @@ function addList() {
             //Reload the page
             removeRemovable();
             pickPage();
-
         }
     })
 }
@@ -510,10 +516,10 @@ function delList(id) {
         console.log(data.message);
         //Check if operation was successful
         if (data.result) {
-            //Reload page
-            removeRemovable();
-            pickPage();
-
+            //Remove element
+            resetManagers();
+            deletePopup();
+            document.getElementById("list-"+id).remove();
         }
     })
 }
@@ -720,9 +726,10 @@ function delItem(id) {
         console.log(data.message);
         //If operation successful
         if (data.result) {
-            //Reload page
-            removeRemovable();
-            pickPage();
+            //Remove item
+            resetManagers();
+            deletePopup();
+            document.getElementById("item-"+id).remove();
         }
     })
 }
