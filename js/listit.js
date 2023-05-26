@@ -66,13 +66,26 @@ function update() {
     //Keep track on what is being pressed
     managePresses();
 
-    //Set the padding of the wrapper
+    //Set the padding of the wrapper and itemdivs
     let padding = (window.innerWidth-window.innerHeight)/2;
     if (padding < 0) {
         padding = 0;
     }
     wrapper.style.paddingLeft = padding+"px";
     wrapper.style.paddingRight = padding+"px";
+
+    let ic = document.getElementById("incomplete");
+    let c = document.getElementById("complete");
+
+    if (ic) {
+        ic.style.paddingLeft = padding+"px";
+        ic.style.paddingRight = padding+"px";
+    }
+
+    if (c) {
+        c.style.paddingLeft = padding+"px";
+        c.style.paddingRight = padding+"px";
+    }
 }
 
 //A function that authorizes the user
@@ -567,13 +580,13 @@ function list(id) {
 
             //Create parent divs for storing complete and incomplete items separately
             let incomplete = document.createElement("div");
-            incomplete.classList = "removable";
+            incomplete.classList = "removable itemdiv";
             incomplete.id = "incomplete";
-            wrapper.appendChild(incomplete);
+            document.body.appendChild(incomplete);
             let complete = document.createElement("div");
-            complete.classList = "removable";
+            complete.classList = "removable itemdiv";
             complete.id = "complete";
-            wrapper.appendChild(complete);
+            document.body.appendChild(complete);
 
             //Iterate over all items in list
             for (let item in items) {
@@ -987,11 +1000,11 @@ function buildItem(id,name,status,amount) {
     //Check if item is completed or not and put the element in correct parent div
     if (status == true) {
         itemBuilder.classList = "removable item complete";
-        complete.appendChild(itemBuilder);
+        document.getElementById("complete").appendChild(itemBuilder);
 
     } else {
         itemBuilder.classList = "removable item";
-        incomplete.appendChild(itemBuilder);
+        document.getElementById("incomplete").appendChild(itemBuilder);
     }
 
     //Create a checkbox for completing/restoring the item

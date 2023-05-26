@@ -21,8 +21,11 @@ body {
 #wrapper {
     box-sizing: border-box;
     width: 100%;
-    min-height: 100%;
     overflow-y: hidden;
+}
+
+.itemdiv {
+    box-sizing: border-box;
 }
 
 #addBar {
