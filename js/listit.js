@@ -65,6 +65,14 @@ function update() {
     manageTextboxes();
     //Keep track on what is being pressed
     managePresses();
+
+    //Set the padding of the wrapper
+    let padding = (window.innerWidth-window.innerHeight)/2;
+    if (padding < 0) {
+        padding = 0;
+    }
+    wrapper.style.paddingLeft = padding+"px";
+    wrapper.style.paddingRight = padding+"px";
 }
 
 //A function that authorizes the user
@@ -158,6 +166,7 @@ function managePresses() {
             if (!document.getElementById("popup")) {
                 //Set the swiped offset of the element
                 document.getElementById(pressable).style.left = offset+"px";
+                document.getElementById(pressable).style.filter = `opacity(${100-(Math.abs(offset)/(screenWidth/4))*100}%)`;
                 //Check if the element has been pressed for 500 ms or more and is not greatly offset
                 if ((Date.now()-pressManager[pressable][4]) >= 500 && Math.abs(offset) <= screenWidth/50) {
                     //Add a popup according to the type of element pressed
@@ -173,7 +182,7 @@ function managePresses() {
                 delManager[pressable] = false;
 
                 //Check if element has been moved half the screen width
-                if (Math.abs(offset) > screenWidth/2) {
+                if (Math.abs(offset) > screenWidth/4) {
                     //Set the element as about to be deleted
                     delManager[pressable] = true;
                 }
@@ -199,6 +208,11 @@ function managePresses() {
                 } else if (pressable.split("-")[0] == "item") {
                     delItem(pressable.split("-")[1]);
                 }
+            }
+
+            if (delManager[pressable] != null) {
+                //Set the opacity of the element to 100%
+                document.getElementById(pressable).style.filter = `opacity(100%)`;
             }
         }
     }

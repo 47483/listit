@@ -19,17 +19,16 @@ body {
 }
 
 #wrapper {
-    position: relative;
-    left: 50%;
-    max-width: 100vh;
+    box-sizing: border-box;
+    width: 100%;
     min-height: 100%;
-    transform: translateX(-50%);
     overflow-y: hidden;
 }
 
 #addBar {
     border: 0.125em solid hsl(275, 75%, 50%);
     margin: 0.25em;
+    padding: 0.125em;
     border-radius: 0.25em;
     display: flex;
     font-size: 2em;
