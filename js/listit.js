@@ -3,6 +3,9 @@ window.onload = function() {
     //Get a reference to the page wrapper
     var wrapper = document.getElementById("wrapper");
 
+    //Begin continuous updating
+    setInterval(function(){update();}, 0);
+
     //Check for stored destination data, load correct page
     pickPage();
 }
@@ -22,9 +25,6 @@ var durations = {};
 //A bool keeping track on mouse pressing
 var mouseDown = false;
 
-//Begin continuous updating
-setInterval(function(){update();}, 0);
-
 //Create eventlisteners for keeping track on some globally used mouse actions
 document.addEventListener("mouseup",function(){
     mouseDown = false;
@@ -41,10 +41,6 @@ document.addEventListener("mousemove",function(e){
             }
         }
     }
-})
-
-document.addEventListener("click",function(e){
-    console.log(e.target);
 })
 
 //A function that will be called continuously
@@ -981,7 +977,7 @@ function buildItem(id,name,status,amount) {
     checkBuilder.type = "checkbox";
     checkBuilder.id = "checkBox-"+id;
     checkBuilder.checked = status;
-    checkBuilder.onclick = function(){updateStatus(checkBuilder,true); console.log("yep");};
+    checkBuilder.onclick = function(){updateStatus(checkBuilder,true);};
     itemBuilder.appendChild(checkBuilder);
 
     //Create a dynamic name-box for the item
