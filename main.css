@@ -37,6 +37,10 @@ body {
     border-bottom: 0.125em solid hsl(275, 75%, 40%);
 }
 
+#addBar:hover {
+    filter: brightness(110%);
+}
+
 #addInput {
     font-size: inherit;
     width: 100%;
@@ -60,6 +64,10 @@ body {
     padding-top: 1em;
     padding-bottom: 1em;
     border-bottom: 0.25em solid hsl(275, 75%, 40%);
+}
+
+.list:hover {
+    filter: brightness(110%);
 }
 
 .listName {
@@ -93,6 +101,10 @@ body {
     border-bottom: 0.125em solid hsl(275, 75%, 40%);
 }
 
+.backBtn:hover {
+    filter: brightness(110%);
+}
+
 .item {
     user-select: none;
     margin: 0.5em;
@@ -104,6 +116,10 @@ body {
     display: flex;
     align-items: center;
     border-bottom: 0.25em solid hsl(275, 75%, 40%);
+}
+
+.item:hover {
+    filter: brightness(110%);
 }
 
 .complete {
@@ -143,6 +159,10 @@ input[type="checkbox"]:checked {
     background-color: white;
 }
 
+input[type="cehckbox"]:hover {
+    filter: brightness(110%);
+}
+
 #popup {
     color: white;
     user-select: none;
@@ -178,4 +198,8 @@ input[type="checkbox"]:checked {
     font-size: inherit;
     border-radius: inherit;
     border-bottom: 0.125em solid hsl(275, 75%, 40%);
+}
+
+.popupBtn:hover {
+    filter: brightness(110%);
 }

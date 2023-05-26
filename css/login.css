@@ -3,11 +3,12 @@
 }
 
 h1 {
-    color: hsl(275, 75%, 50%);
+    color: white;
     font-size: 6em;
     margin-bottom: 0.5em;
     margin-left: 0.5em;
     margin-right: 0.5em;
+    user-select: none;
 }
 
 body {
@@ -39,8 +40,16 @@ main {
     border-bottom: 0.25em solid hsl(275, 75%, 40%);
 }
 
+.loginfield:hover {
+    filter: brightness(110%);
+}
+
 .btn {
     background-color: hsl(275, 75%, 50%);
     color: white;
     border-bottom: 0.25em solid hsl(275, 75%, 40%);
+}
+
+.btn:hover {
+    filter: brightness(110%);
 }
