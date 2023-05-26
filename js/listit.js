@@ -24,8 +24,9 @@ var durations = {};
 
 //A bool keeping track on mouse pressing
 var mouseDown = false;
+var popupWhenClick = false;
 
-//Create eventlisteners for keeping track on some globally used mouse actions
+//Create eventlisteners for keeping track on some globally used mouse/touch actions
 document.addEventListener("mouseup",function(){
     mouseDown = false;
     for (let pressable in pressManager) {
@@ -42,6 +43,21 @@ document.addEventListener("mousemove",function(e){
         }
     }
 })
+
+if (touchEnabled) {
+    document.addEventListener("ontouchstart",function(){
+        if (document.getElementById("popup")) {
+            popupWhenClick = true;
+        }
+    })
+
+} else {
+    document.addEventListener("mousedown",function(){
+        if (document.getElementById("popup")) {
+            popupWhenClick = true;
+        }
+    })
+}
 
 //A function that will be called continuously
 function update() {
@@ -166,7 +182,7 @@ function managePresses() {
         } else {
             //Check if the element has been pressed for less than 500 ms
             if (Date.now()-durations[pressable] < 500) {
-                //list(pressable.split("-")[1]);
+                list(pressable.split("-")[1]);
                 durations = {};
 
             } else {
@@ -208,6 +224,7 @@ function removeRemovable() {
 
 //A function for deleting a popup
 function deletePopup() {
+    popupWhenClick = false;
     //Get the elements of the popup
     popup = document.getElementById("popup");
     popupBG = document.getElementById("popupBG");
@@ -219,11 +236,6 @@ function deletePopup() {
 
     if (popupBG) {
         popupBG.remove();
-    }
-
-    //Allow page to scroll again
-    if (popup || popupBG) {
-        document.body.style.overflowY = "auto";
     }
 }
 
@@ -299,8 +311,6 @@ function lists() {
 
 //A function for creating a popup for list options
 function listPopup(id) {
-    //Lock the page from scrolling
-    document.body.style.overflowY = "hidden";
     //Get list name
     listName = document.getElementById("nameBox-"+id.split("-")[1]).value;
 
@@ -330,14 +340,14 @@ function listPopup(id) {
     let openBtn = document.createElement("button");
     openBtn.innerHTML = "Open "+listName;
     openBtn.classList = "popupBtn";
-    openBtn.onmouseup = function(){list(id.split("-")[1]);};
+    openBtn.onmouseup = function(){if(popupWhenClick){list(id.split("-")[1]);}};
     popup.appendChild(openBtn);
 
     //Create a button for deleting the list
     let deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "Delete "+listName;
     deleteBtn.classList = "popupBtn";
-    deleteBtn.onmouseup = function(){delList(id.split("-")[1]);};
+    deleteBtn.onmouseup = function(){if(popupWhenClick){delList(id.split("-")[1]);}};
     popup.appendChild(deleteBtn);
 }
 
@@ -662,8 +672,6 @@ function deleteAll() {
 
 //A function for creating a popup for item settings
 function itemPopup(id) {
-    //Disable page scrolling
-    document.body.style.overflowY = "hidden";
     //Get name of provided element id
     itemName = document.getElementById("inameBox-"+id.split("-")[1]).value;
     
@@ -695,20 +703,20 @@ function itemPopup(id) {
     //Create a button for completing/restoring the element
     let completeBtn = document.createElement("button");
     completeBtn.classList = "popupBtn";
-    completeBtn.onmouseup = function(){updateStatus(checkBox,false);};
+    completeBtn.onmouseup = function(){if(popupWhenClick){updateStatus(checkBox,false);}};
     popup.appendChild(completeBtn);
 
     //Create a button for completing all elements in the current list
     let completeallBtn = document.createElement("button");
     completeallBtn.classList = "popupBtn";
-    completeallBtn.onmouseup = function(){updateStatusAll(checkBox);};
+    completeallBtn.onmouseup = function(){if(popupWhenClick){updateStatusAll(checkBox);}};
     popup.appendChild(completeallBtn);
 
     //Create a button for deleting the current item
     let deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "Delete "+itemName;
     deleteBtn.classList = "popupBtn";
-    deleteBtn.onmouseup = function(){delItem(id.split("-")[1]);};
+    deleteBtn.onmouseup = function(){if(popupWhenClick){delItem(id.split("-")[1]);}};
     popup.appendChild(deleteBtn);
 
     //Check if the checkbox is checked
@@ -721,7 +729,7 @@ function itemPopup(id) {
         let deleteallBtn = document.createElement("button");
         deleteallBtn.classList = "popupBtn";
         deleteallBtn.innerHTML = "Delete All";
-        deleteallBtn.onmouseup = function(){deleteAll();};
+        deleteallBtn.onmouseup = function(){if(popupWhenClick){deleteAll();}};
         popup.appendChild(deleteallBtn);
 
     } else {
@@ -1038,6 +1046,7 @@ function buildList(id,name) {
     nameBuilder.id = "nameBox-"+id;
     nameBuilder.autocomplete = "off";
     textboxManager.push("nameBox-"+id);
+    nameBuilder.onclick = function(){durations = {};};
     nameBuilder.onblur = function(){changeObjectName("nameBox-"+id);};
     listBuilder.appendChild(nameBuilder);
 }
