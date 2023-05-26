@@ -131,8 +131,6 @@ function manageTextboxes() {
 
 //A function for managing presses and swipe-delete
 function managePresses() {
-    //Hide sidebars that appear when deleting item/list
-    deleteWarning(0,false);
 
     //Iterate over all pressable things
     for (let pressable in pressManager) {
@@ -158,9 +156,6 @@ function managePresses() {
                         itemPopup(pressable);
                     }
                 }
-
-                //Set the visibility of the delete warnings based on offset compared to screen width
-                deleteWarning(Math.abs(offset)/screenWidth,true);
 
                 //Set the current element as not about to be deleted
                 delManager[pressable] = false;
@@ -236,30 +231,6 @@ function deletePopup() {
     }
 }
 
-//A function for displaying delete warnings
-function deleteWarning(strength,add) {
-    //Remove previous warnings
-    let remove = document.querySelectorAll(".deleteWarning");
-    remove.forEach(element => {
-        element.remove();
-    })
-
-    //Check if to add new warnings or not
-    if (add) {
-        //Create warnings and assign them the right properties
-        let warningL = document.createElement("div");
-        warningL.classList = "deleteWarning";
-        warningL.style.left = 0;
-        warningL.style.backgroundImage = `linear-gradient(to right, hsla(125,100%,60%,${strength/2}), hsla(125,100%,60%,0))`;
-        document.body.appendChild(warningL);
-
-        let warningR = document.createElement("div");
-        warningR.classList = "deleteWarning";
-        warningR.style.right = 0;
-        warningR.style.backgroundImage = `linear-gradient(to left, hsla(125,100%,60%,${strength/2}), hsla(125,100%,60%,0))`;
-        document.body.appendChild(warningR);
-    }
-}
 //A function for fetching all lists for user
 function lists() {
     //Clear target page
@@ -623,7 +594,7 @@ function addItem(listid) {
         //If operation successful
         if (data.result) {
             //Create new item using provided params
-            buildItem(data.id,document.getElementById("addInput"),0,1);
+            buildItem(data.id,document.getElementById("addInput").value,0,1);
             document.getElementById("addInput").value = "";
         }
     })
