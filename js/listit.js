@@ -45,7 +45,7 @@ document.addEventListener("mousemove",function(e){
 })
 
 if (touchEnabled) {
-    document.addEventListener("ontouchstart",function(){
+    document.addEventListener("touchstart",function(){
         if (document.getElementById("popup")) {
             popupWhenClick = true;
         }
