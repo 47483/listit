@@ -56,6 +56,9 @@ function signup($db) {
             $stmt=$db->prepare('INSERT INTO `users` (`email`,`password`) VALUES (:email,:password)');
             if ($stmt->execute(["email"=>$userinfo[0],"password"=>$userinfo[1]])) {
                 return respond("Account created successfully.",true);
+
+            } else {
+                return respond("Failed to create account.",false);
             }
         }
     }
