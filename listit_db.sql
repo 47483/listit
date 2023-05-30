@@ -1,5 +1,5 @@
 /*
-SQLyog Community v13.2.0 (64 bit)
+SQLyog Community
 MySQL - 5.7.36 : Database - listit_db
 *********************************************************************
 */
@@ -12,10 +12,6 @@ MySQL - 5.7.36 : Database - listit_db
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`listit_db` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_swedish_ci */;
-
-USE `listit_db`;
-
 /*Table structure for table `items` */
 
 DROP TABLE IF EXISTS `items`;
@@ -32,12 +28,7 @@ CREATE TABLE `items` (
   KEY `list_2` (`list`),
   CONSTRAINT `items_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `items_ibfk_2` FOREIGN KEY (`list`) REFERENCES `lists` (`listid`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-
-/*Data for the table `items` */
-
-insert  into `items`(`itemid`,`user`,`list`,`itemname`,`status`,`amount`) values 
-(1,1,1,'testitem',0,1);
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 /*Table structure for table `lists` */
 
@@ -50,12 +41,7 @@ CREATE TABLE `lists` (
   PRIMARY KEY (`listid`),
   KEY `user` (`user`),
   CONSTRAINT `lists_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-
-/*Data for the table `lists` */
-
-insert  into `lists`(`listid`,`user`,`listname`) values 
-(1,1,'testlist');
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 /*Table structure for table `users` */
 
@@ -66,12 +52,7 @@ CREATE TABLE `users` (
   `email` varchar(60) COLLATE utf8_swedish_ci NOT NULL,
   `password` varchar(160) COLLATE utf8_swedish_ci NOT NULL,
   PRIMARY KEY (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
-
-/*Data for the table `users` */
-
-insert  into `users`(`userid`,`email`,`password`) values 
-(1,'test@test.test','a94a8fe5ccb19ba61c4c0873d391e987982fbbd3');
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
