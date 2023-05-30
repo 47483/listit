@@ -179,7 +179,10 @@ function managePresses() {
             if (!document.getElementById("popup")) {
                 //Set the swiped offset of the element
                 document.getElementById(pressable).style.left = offset+"px";
-                document.getElementById(pressable).style.filter = `opacity(${100-(Math.abs(offset)/(screenWidth/4))*100}%)`;
+
+                let visibility = 100-(Math.abs(offset)/(screenWidth/4))*100;
+                if (visibility < 0) {visibility = 0;}
+                document.getElementById(pressable).style.filter = `opacity(${visibility}%)`;
                 //Check if the element has been pressed for 500 ms or more and is not greatly offset
                 if ((Date.now()-pressManager[pressable][4]) >= 500 && Math.abs(offset) <= screenWidth/50) {
                     //Add a popup according to the type of element pressed
